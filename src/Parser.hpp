@@ -15,7 +15,7 @@ class Parser
 public:
     Parser() noexcept;
 
-    struct Node* parse(std::vector<struct Token>& token_list);
+    struct Node* parse(std::vector<struct Token*>& token_list);
 
 private:
     // 入力するプログラム
@@ -25,7 +25,7 @@ private:
     struct Node* parseNum();
 
     // 解析中のトークン
-    std::vector<struct Token>::iterator parsing_token;
+    std::vector<struct Token*>::iterator parsing_token;
 };
 
 #endif

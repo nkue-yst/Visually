@@ -9,9 +9,17 @@
 #include "Token.hpp"
 
 #include <cstdlib>
+#include <iostream>
 
 Parser::Parser() noexcept
 {}
+
+Node* Parser::parse(std::vector<Token*>& token_list)
+{
+    this->parsing_token = token_list.begin();
+
+    return this->parseProgram();
+}
 
 Node* Parser::parseProgram()
 {
@@ -22,16 +30,10 @@ Node* Parser::parseNum()
 {
     Node* node = new Node();
     node->type = NodeType::NUM;
-    node->value = std::atoi(this->parsing_token->token_head);
+    Token* target_token = *(this->parsing_token);
+    node->value = std::atoi(target_token->token_head);
 
     this->parsing_token++;
 
     return node;
-}
-
-Node* Parser::parse(std::vector<Token>& token_list)
-{
-    this->parsing_token = token_list.begin();
-
-    return this->parseProgram();
 }

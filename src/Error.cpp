@@ -13,10 +13,10 @@ namespace Error
 {
 
     std::unordered_map<std::string, std::string> msg_table = {
-        { "undefined error", "予期せぬエラーが発生しました" },
-        { "no source",       "ソースプログラムを指定してください" },
-        { "invalid char",    "不正な文字が含まれています" },
-        { "test",            "テスト" },
+        { "undefined error",    "予期せぬエラーが発生しました" },
+        { "no source",          "ソースプログラムを指定してください" },
+        { "cannot open source", "ソースプログラムが開けませんでした" },
+        { "invalid char",       "不正な文字が含まれています" },
     };
 
     void abort() noexcept

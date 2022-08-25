@@ -8,6 +8,8 @@
 #define __TOKEN_HPP__
 
 #include <cstdint>
+#include <iosfwd>
+#include <string>
 #include <vector>
 
 /* 入力文字列を分解したトークンの種類 */
@@ -23,19 +25,22 @@ struct Token
 {
 public:
     Token() noexcept;
-    Token(TokenType type, char* token_head, int32_t len) noexcept;
+    Token(TokenType type, const char* token_head, int32_t len) noexcept;
 
     // 入力文字列をトークンに変換する
-    static std::vector<Token> strToToken(char* str);
+    static std::vector<Token*> strToToken(std::string str);
 
     // トークンの種類
     TokenType type;
 
     // トークン開始地点
-    char* token_head;
+    const char* token_head;
 
     // トークンの長さ
     int32_t len;
 };
+
+// トークン情報出力処理
+std::ostream& operator<<(std::ostream& stream, const Token* token);
 
 #endif
