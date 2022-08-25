@@ -20,7 +20,7 @@ constexpr char version[] = "0.0.1";
 
 void printHelp(const char* exec_command)
 {
-    std::cerr << "PLC version " << version << std::endl;
+    std::cerr << "Visually version " << version << std::endl;
     std::cerr << "Usage: " << exec_command << " [options] input" << std::endl;
     std::cerr << "Options:\n"
                 << "    " << "-t" << "    Output token info\n"

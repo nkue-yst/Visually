@@ -21,7 +21,7 @@ namespace Error
 
     void abort() noexcept
     {
-        std::cerr << "plc: " << "\033[1;31m" << "fatal error: " << "\033[m" << msg << std::endl;
+        std::cerr << "Visually: " << "\033[1;31m" << "fatal error: " << "\033[m" << msg << std::endl;
         exit(1);
     }
 
