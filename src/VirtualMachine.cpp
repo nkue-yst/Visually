@@ -17,7 +17,7 @@ VirtualMachine::VirtualMachine()
     this->sp = this->stack;
 
     /* SDL関連の初期化処理 */
-    if (SDL_Init(SDL_INIT_EVERYTHING) != 0)
+    if (SDL_Init(SDL_INIT_VIDEO) != 0)
     {
         Error::setErrorMsg("failed to init sdl");
         Error::abort();

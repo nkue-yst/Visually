@@ -29,5 +29,3 @@ set(SDL2_DIR ${CMAKE_BINARY_DIR}/thirdparty/SDL)
 find_package(SDL2 REQUIRED)
 include_directories(${SDL2_INCLUDE_DIRS})
 target_link_libraries(Visually ${SDL2_STATIC_LIBRARIES})
-
-message(STATUS "SDL2_STATIC_LIBRARIES: ${SDL2_STATIC_LIBRARIES}")
