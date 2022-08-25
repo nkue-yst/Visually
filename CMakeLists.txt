@@ -21,3 +21,13 @@ endif()
 ### Setup main sources ###
 file(GLOB Visually_SRC ${CMAKE_SOURCE_DIR}/src/*.cpp)
 add_executable(Visually ${Visually_SRC})
+
+### Setup SDL2 ###
+set(BUILD_SHARED_LIBS OFF)
+add_subdirectory(${CMAKE_SOURCE_DIR}/thirdparty/SDL)
+set(SDL2_DIR ${CMAKE_BINARY_DIR}/thirdparty/SDL)
+find_package(SDL2 REQUIRED)
+include_directories(${SDL2_INCLUDE_DIRS})
+target_link_libraries(Visually ${SDL2_STATIC_LIBRARIES})
+
+message(STATUS "SDL2_STATIC_LIBRARIES: ${SDL2_STATIC_LIBRARIES}")

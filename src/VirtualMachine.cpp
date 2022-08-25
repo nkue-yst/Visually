@@ -5,13 +5,28 @@
  */
 
 #include "VirtualMachine.hpp"
+#include "Error.hpp"
 #include "Operation.hpp"
+
+#include <SDL.h>
 
 #include <iostream>
 
-VirtualMachine::VirtualMachine() noexcept
+VirtualMachine::VirtualMachine()
 {
     this->sp = this->stack;
+
+    /* SDL関連の初期化処理 */
+    if (SDL_Init(SDL_INIT_EVERYTHING) != 0)
+    {
+        Error::setErrorMsg("failed to init sdl");
+        Error::abort();
+    }
+}
+
+VirtualMachine::~VirtualMachine()
+{
+    SDL_Quit();
 }
 
 int32_t VirtualMachine::run(std::vector<struct Operation>& operation_list)

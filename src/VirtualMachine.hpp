@@ -16,7 +16,8 @@ constexpr uint32_t MAX_STACK_SIZE = 1024;
 class VirtualMachine
 {
 public:
-    VirtualMachine() noexcept;
+    VirtualMachine();
+    ~VirtualMachine();
 
     // プログラムを実行する
     int32_t run(std::vector<struct Operation>& operation_list);
