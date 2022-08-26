@@ -13,6 +13,13 @@
 // スタックのサイズを定義
 constexpr uint32_t MAX_STACK_SIZE = 1024;
 
+enum class Register
+{
+    REG_0,
+    REG_1,
+    REG_NUM,    // レジスタの総数
+};
+
 class VirtualMachine
 {
 public:
@@ -34,6 +41,9 @@ private:
 
     // スタックポインタ
     int32_t* sp;
+
+    // 計算等処理用レジスタ
+    int32_t reg[static_cast<int32_t>(Register::REG_NUM)];
 };
 
 #endif

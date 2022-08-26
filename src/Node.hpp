@@ -13,6 +13,8 @@
 enum class NodeType
 {
     NUM,          // 数値
+    ADD,          // 加算演算子
+    SUB,          // 減算演算子
     UNDIFINED,    // 未定義
 };
 

@@ -14,7 +14,7 @@
 
 VirtualMachine::VirtualMachine()
 {
-    this->sp = this->stack;
+    this->sp = this->stack;    // スタックポインタは命令列用スタックの先頭を指す
 
     /* SDL関連の初期化処理 */
     if (SDL_Init(SDL_INIT_VIDEO) != 0)
@@ -38,7 +38,19 @@ int32_t VirtualMachine::run(std::vector<struct Operation>& operation_list)
         switch (operation->type)
         {
         case OperationType::PUSH:
-            this->push(operation->operand);
+            this->push(operation->first_operand);
+            break;
+
+        case OperationType::POP:
+            this->reg[operation->first_operand] = pop();
+            break;
+
+        case OperationType::ADD:
+            this->push(this->reg[operation->first_operand] + this->reg[operation->second_operand]);
+            break;
+
+        case OperationType::SUB:
+            this->push(this->reg[operation->first_operand] - this->reg[operation->second_operand]);
             break;
 
         default:

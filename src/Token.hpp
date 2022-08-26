@@ -16,6 +16,7 @@
 enum class TokenType
 {
     NUM,          // 数値
+    OP,           // 演算子
     TK_EOF,       // 終端文字
     UNDEFINED,    // 未定義
 };

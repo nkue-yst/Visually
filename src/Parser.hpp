@@ -7,6 +7,7 @@
 #ifndef __PARSER_HPP__
 #define __PARSER_HPP__
 
+#include <string>
 #include <vector>
 
 /* 構文解析を行うクラス */
@@ -20,6 +21,12 @@ public:
 private:
     // 入力するプログラム
     struct Node* parseProgram();
+
+    // 加減算を解析
+    struct Node* parseOperator();
+
+    // 次のトークンが引数の文字と等しいかをチェック
+    bool checkNextToken(std::string ch);
 
     // トークンを数値として解析
     struct Node* parseNum();
