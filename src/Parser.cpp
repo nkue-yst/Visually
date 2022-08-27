@@ -97,9 +97,11 @@ Node* Parser::parsePrimary()
             Error::setErrorMsg("invalid expression");
             Error::abort();
         }
+
+        return node;    // 括弧内の式のルートノードを返す
     }
 
-    return this->parseNum();
+    return this->parseNum();    // 次のトークンが'('でなければ整数値を返す
 }
 
 Node* Parser::parseNum()

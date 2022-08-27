@@ -66,7 +66,7 @@ int32_t VirtualMachine::run(std::vector<struct Operation*>& operation_list)
             break;
         }
 
-        op_iter++;
+        op = *(++op_iter);
     }
 
     return pop();    // スタックのトップを実行結果とする

@@ -48,33 +48,29 @@ public:
 // 生成した命令列の出力処理
 static std::ostream& operator<<(std::ostream& stream, const Operation* op)
 {
-    std::string type;
-
     switch (op->type)
     {
     case OperationType::PUSH:
-        type = "PUSH";
+        stream << "PUSH (" << op->first_operand << ")";
         break;
     case OperationType::POP:
-        type = "POP";
+        stream << "POP  (Reg_" << op->first_operand << ")";
         break;
     case OperationType::ADD:
-        type = "ADD";
+        stream << "ADD  (Reg_" << op->first_operand << ", Reg_" << op->second_operand << ")";
         break;
     case OperationType::SUB:
-        type = "SUB";
+        stream << "SUB  (Reg_" << op->first_operand << ", Reg_" << op->second_operand << ")";
         break;
     case OperationType::MUL:
-        type = "MUL";
+        stream << "MUL  (Reg_" << op->first_operand << ", Reg_" << op->second_operand << ")";
         break;
     case OperationType::DIV:
-        type = "DIV";
+        stream << "DIV  (Reg_" << op->first_operand << ", Reg_" << op->second_operand << ")";
         break;
     default:
         break;
     }
-
-    stream << type;
 
     return stream;
 }
