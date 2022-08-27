@@ -30,11 +30,13 @@ Node* Parser::parseProgram()
 
 Node* Parser::expression()
 {
-    Node* root_node = this->parseMulDiv();    // まずは乗算・除算を解析
+    Node* root_node = this->parseMulDiv();     // まずは乗算・除算を解析
 
     while (true)
     {
-        if (this->checkNextToken("+"))
+        if (this->checkNextToken(" "))         // 空白文字は読み飛ばす
+        {}
+        else if (this->checkNextToken("+"))    // 加算演算子の場合
         {
             Node* add_node  = new Node();
             add_node->type  = NodeType::ADD;
@@ -42,7 +44,7 @@ Node* Parser::expression()
             add_node->right = this->parseMulDiv();
             root_node = add_node;
         }
-        else if (this->checkNextToken("-"))
+        else if (this->checkNextToken("-"))    // 減算演算子の場合
         {
             Node* sub_node  = new Node();
             sub_node->type  = NodeType::SUB;
@@ -63,7 +65,9 @@ Node* Parser::parseMulDiv()
 
     while (true)
     {
-        if (this->checkNextToken("*"))
+        if (this->checkNextToken(" "))         // 空白文字は読み飛ばす
+        {}
+        else if (this->checkNextToken("*"))
         {
             Node* mul_node  = new Node();
             mul_node->type  = NodeType::MUL;
@@ -88,6 +92,10 @@ Node* Parser::parseMulDiv()
 
 Node* Parser::parsePrimary()
 {
+    // 次のトークンが空白文字の場合、次の文字まで飛ばす
+    while (this->checkNextToken(" "))
+    {}
+
     // 次のトークンが'('であれば式が来る
     if (this->checkNextToken("("))
     {
@@ -106,9 +114,10 @@ Node* Parser::parsePrimary()
 
 Node* Parser::parseNum()
 {
+    Token* target_token = *(this->parsing_token);
+
     Node* node = new Node();
     node->type = NodeType::NUM;
-    Token* target_token = *(this->parsing_token);
     node->value = std::atoi(target_token->token_head);
 
     this->parsing_token++;

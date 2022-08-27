@@ -35,7 +35,12 @@ std::vector<Token*> Token::strToToken(std::string str)
         char ch = ch_str[0];
         Token* new_token = nullptr;
 
-        if (ch == '+' || ch == '-' || ch == '*' || ch == '/')    // 文字が演算子の場合
+        if (std::isspace(ch))    // 文字が空白文字の場合、何もせずに次の文字へ
+        {
+            new_token = new Token(TokenType::SPACE, ch_str, 1);
+            ch_str++;
+        }
+        else if (ch == '+' || ch == '-' || ch == '*' || ch == '/')    // 文字が演算子の場合
         {
             new_token = new Token(TokenType::OP, ch_str, 1);
             ch_str++;
@@ -99,6 +104,9 @@ std::ostream& operator<<(std::ostream& stream, const Token* token)
     case TokenType::L_BRACE:
     case TokenType::R_BRACE:
         type = "BRACE";
+        break;
+    case TokenType::SPACE:
+        type = "SPACE";
         break;
     case TokenType::TK_EOF:
         type = "EOF";

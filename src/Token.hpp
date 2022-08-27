@@ -19,6 +19,7 @@ enum class TokenType
     OP,           // 演算子
     L_BRACE,      // '('
     R_BRACE,      // ')'
+    SPACE,        // 空白文字
     TK_EOF,       // 終端文字
     UNDEFINED,    // 未定義
 };
