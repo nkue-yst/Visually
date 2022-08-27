@@ -53,6 +53,14 @@ int32_t VirtualMachine::run(std::vector<struct Operation>& operation_list)
             this->push(this->reg[operation->first_operand] - this->reg[operation->second_operand]);
             break;
 
+        case OperationType::MUL:
+            this->push(this->reg[operation->first_operand] * this->reg[operation->second_operand]);
+            break;
+
+        case OperationType::DIV:
+            this->push(this->reg[operation->first_operand] / this->reg[operation->second_operand]);
+            break;
+
         default:
             break;
         }

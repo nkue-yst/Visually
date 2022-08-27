@@ -16,6 +16,8 @@ enum class OperationType
     POP,
     ADD,
     SUB,
+    MUL,
+    DIV,
     UNDEFINED,
 };
 

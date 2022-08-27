@@ -15,6 +15,8 @@ enum class NodeType
     NUM,          // 数値
     ADD,          // 加算演算子
     SUB,          // 減算演算子
+    MUL,          // 乗算
+    DIV,          // 除算
     UNDIFINED,    // 未定義
 };
 
@@ -22,7 +24,12 @@ enum class NodeType
 struct Node
 {
 public:
-    Node() noexcept;
+    Node() noexcept
+        : type(NodeType::UNDIFINED)
+        , left(nullptr)
+        , right(nullptr)
+        , value(0)
+    {}
 
     // ノードの種類
     NodeType type;

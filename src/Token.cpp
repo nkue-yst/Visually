@@ -35,9 +35,19 @@ std::vector<Token*> Token::strToToken(std::string str)
         char ch = ch_str[0];
         Token* new_token = nullptr;
 
-        if (ch == '+' || ch == '-')    // 文字が'+'演算子の場合
+        if (ch == '+' || ch == '-' || ch == '*' || ch == '/')    // 文字が演算子の場合
         {
             new_token = new Token(TokenType::OP, ch_str, 1);
+            ch_str++;
+        }
+        else if (ch == '(')
+        {
+            new_token = new Token(TokenType::L_BRACE, ch_str, 1);
+            ch_str++;
+        }
+        else if (ch == ')')
+        {
+            new_token = new Token(TokenType::R_BRACE, ch_str, 1);
             ch_str++;
         }
         else if (std::isdigit(ch))    // 文字が数値の場合

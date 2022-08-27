@@ -34,6 +34,24 @@ std::vector<Operation> CodeGenerator::generateCode(Node* node) noexcept
         this->operation_list.push_back(Operation(OperationType::SUB, static_cast<int32_t>(Register::REG_1), static_cast<int32_t>(Register::REG_0)));
         break;
 
+    case NodeType::MUL:
+        this->generateCode(node->left);
+        this->generateCode(node->right);
+
+        this->operation_list.push_back(Operation(OperationType::POP, static_cast<int32_t>(Register::REG_0)));
+        this->operation_list.push_back(Operation(OperationType::POP, static_cast<int32_t>(Register::REG_1)));
+        this->operation_list.push_back(Operation(OperationType::MUL, static_cast<int32_t>(Register::REG_0), static_cast<int32_t>(Register::REG_1)));
+        break;
+
+    case NodeType::DIV:
+        this->generateCode(node->left);
+        this->generateCode(node->right);
+
+        this->operation_list.push_back(Operation(OperationType::POP, static_cast<int32_t>(Register::REG_0)));
+        this->operation_list.push_back(Operation(OperationType::POP, static_cast<int32_t>(Register::REG_1)));
+        this->operation_list.push_back(Operation(OperationType::MUL, static_cast<int32_t>(Register::REG_1), static_cast<int32_t>(Register::REG_0)));
+        break;
+
     default:
         break;
     }
