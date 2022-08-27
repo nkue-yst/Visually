@@ -135,7 +135,7 @@ int main(int argc, char** argv)
 
     std::cout << vm.run(code_list) << std::endl;    // 命令列を実行（実行結果を出力）
 
-    delete node;
-    for (auto token : token_list)
-        delete token;
+    for (auto code : code_list) delete code;       // 生成した命令列の破棄
+    delete node;                                   // 生成したノードの破棄
+    for (auto token : token_list) delete token;    // 生成したトークンの破棄
 }

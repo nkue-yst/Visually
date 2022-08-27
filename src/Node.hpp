@@ -34,6 +34,12 @@ public:
         , value(0)
     {}
 
+    ~Node() noexcept
+    {
+        delete this->left;
+        delete this->right;
+    }
+
     // ルートノードから再帰的に全ノード情報を出力
     void printChildren(uint32_t start_depth)
     {
