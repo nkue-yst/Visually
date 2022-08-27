@@ -24,12 +24,14 @@ void printHelp(const char* exec_command)
     std::cerr << "Usage: " << exec_command << " [options] input" << std::endl;
     std::cerr << "Options:\n"
                 << "    " << "-t" << "    Output token info\n"
+                << "    " << "-c" << "    Output code info\n"
                 << std::endl;
 }
 
 int main(int argc, char** argv)
 {
     bool token_flag = false;    // トークン情報出力フラグ
+    bool code_flag  = false;    // 命令列出力フラグ
 
     CodeGenerator code_generator;    // 命令列生成器
     Parser parser;                   // プログラム解析器
@@ -48,11 +50,12 @@ int main(int argc, char** argv)
             case 't':
                 token_flag = true;
                 break;
-
+            case 'c':
+                code_flag = true;
+                break;
             case 'h':
                 printHelp(argv[0]);
                 return 0;
-
             default:
                 printHelp(argv[0]);
                 return 1; 
@@ -96,7 +99,22 @@ int main(int argc, char** argv)
 
     Node* node = parser.parse(token_list);    // トークンから構文解析を行う
 
-    std::vector<Operation> code_list = code_generator.generateCode(node);    // 実行用コードを生成
+    std::vector<Operation*> code_list = code_generator.generateCode(node);    // 実行用コードを生成
+
+    /* 生成された命令列を出力 */
+    if (code_flag)
+    {
+        uint32_t code_index = 0;
+
+        std::cout << "---------- Code Info ----------" << std::endl;
+
+        for (Operation* op : code_list)
+        {
+            std::cout << "[" << code_index++ << "]: " << op << std::endl;
+        }
+
+        std::cout << "-------------------------------" << std::endl << std::endl;
+    }
 
     std::cout << vm.run(code_list) << std::endl;    // 命令列を実行（実行結果を出力）
 

@@ -15,10 +15,10 @@
 class CodeGenerator
 {
 public:
-    std::vector<Operation> generateCode(struct Node* node) noexcept;
+    std::vector<Operation*> generateCode(struct Node* node) noexcept;
 
 private:
-    std::vector<Operation> operation_list;
+    std::vector<Operation*> operation_list;
 };
 
 #endif

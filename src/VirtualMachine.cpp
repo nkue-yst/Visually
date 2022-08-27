@@ -29,43 +29,44 @@ VirtualMachine::~VirtualMachine()
     SDL_Quit();
 }
 
-int32_t VirtualMachine::run(std::vector<struct Operation>& operation_list)
+int32_t VirtualMachine::run(std::vector<struct Operation*>& operation_list)
 {
-    std::vector<Operation>::iterator operation = operation_list.begin();
+    std::vector<Operation*>::iterator op_iter = operation_list.begin();
+    Operation* op = *op_iter;
 
-    while (operation != operation_list.end())
+    while (op_iter != operation_list.end())
     {
-        switch (operation->type)
+        switch (op->type)
         {
         case OperationType::PUSH:
-            this->push(operation->first_operand);
+            this->push(op->first_operand);
             break;
 
         case OperationType::POP:
-            this->reg[operation->first_operand] = pop();
+            this->reg[op->first_operand] = pop();
             break;
 
         case OperationType::ADD:
-            this->push(this->reg[operation->first_operand] + this->reg[operation->second_operand]);
+            this->push(this->reg[op->first_operand] + this->reg[op->second_operand]);
             break;
 
         case OperationType::SUB:
-            this->push(this->reg[operation->first_operand] - this->reg[operation->second_operand]);
+            this->push(this->reg[op->first_operand] - this->reg[op->second_operand]);
             break;
 
         case OperationType::MUL:
-            this->push(this->reg[operation->first_operand] * this->reg[operation->second_operand]);
+            this->push(this->reg[op->first_operand] * this->reg[op->second_operand]);
             break;
 
         case OperationType::DIV:
-            this->push(this->reg[operation->first_operand] / this->reg[operation->second_operand]);
+            this->push(this->reg[op->first_operand] / this->reg[op->second_operand]);
             break;
 
         default:
             break;
         }
 
-        operation++;
+        op_iter++;
     }
 
     return pop();    // スタックのトップを実行結果とする

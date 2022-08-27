@@ -27,7 +27,7 @@ public:
     ~VirtualMachine();
 
     // プログラムを実行する
-    int32_t run(std::vector<struct Operation>& operation_list);
+    int32_t run(std::vector<struct Operation*>& operation_list);
 
 private:
     // スタックに値を追加する

@@ -8,6 +8,8 @@
 #define __OPERATION_HPP__
 
 #include <cstdint>
+#include <iostream>
+#include <string>
 
 /* 命令コードの種類 */
 enum class OperationType
@@ -42,5 +44,39 @@ public:
     int32_t first_operand;
     int32_t second_operand;
 };
+
+// 生成した命令列の出力処理
+static std::ostream& operator<<(std::ostream& stream, const Operation* op)
+{
+    std::string type;
+
+    switch (op->type)
+    {
+    case OperationType::PUSH:
+        type = "PUSH";
+        break;
+    case OperationType::POP:
+        type = "POP";
+        break;
+    case OperationType::ADD:
+        type = "ADD";
+        break;
+    case OperationType::SUB:
+        type = "SUB";
+        break;
+    case OperationType::MUL:
+        type = "MUL";
+        break;
+    case OperationType::DIV:
+        type = "DIV";
+        break;
+    default:
+        break;
+    }
+
+    stream << type;
+
+    return stream;
+}
 
 #endif

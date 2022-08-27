@@ -93,19 +93,19 @@ std::ostream& operator<<(std::ostream& stream, const Token* token)
     case TokenType::NUM:
         type = "NUM";
         break;
-
     case TokenType::OP:
         type = "OP";
         break;
-
+    case TokenType::L_BRACE:
+    case TokenType::R_BRACE:
+        type = "BRACE";
+        break;
     case TokenType::TK_EOF:
         type = "EOF";
         break;
-
     case TokenType::UNDEFINED:
         type = "UNDEFINED";
         break;
-
     default:
         break;
     }
