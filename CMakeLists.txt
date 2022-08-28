@@ -23,6 +23,7 @@ file(GLOB Visually_SRC ${CMAKE_SOURCE_DIR}/src/*.cpp)
 add_executable(Visually ${Visually_SRC})
 
 ### Setup SDL2 ###
+set(SDL_TEST OFF)
 set(BUILD_SHARED_LIBS OFF)
 add_subdirectory(${CMAKE_SOURCE_DIR}/thirdparty/SDL)
 set(SDL2_DIR ${CMAKE_BINARY_DIR}/thirdparty/SDL)

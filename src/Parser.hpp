@@ -28,13 +28,16 @@ private:
     // 乗除算を解析
     struct Node* parseMulDiv();
 
-    // 数値または式（(expression)）を解析
+    // 単項演算子の解析
+    struct Node* parseUnary();
+
+    // 数値または['(' + 式 + ')']を解析
     struct Node* parsePrimary();
 
     // トークンを数値として解析
     struct Node* parseNum();
 
-    // 次のトークンが引数の文字と等しいかをチェック（読んでいるトークンは次へ進める）
+    // 次のトークンが引数の文字と等しいかをチェック（等しければ読んでいるトークンは次へ進める）
     bool checkNextToken(std::string ch);
 
     // 解析中のトークン

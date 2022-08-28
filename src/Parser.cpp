@@ -61,7 +61,7 @@ Node* Parser::expression()
 
 Node* Parser::parseMulDiv()
 {
-    Node* root_node = this->parsePrimary();
+    Node* root_node = this->parseUnary();
 
     while (true)
     {
@@ -72,7 +72,7 @@ Node* Parser::parseMulDiv()
             Node* mul_node  = new Node();
             mul_node->type  = NodeType::MUL;
             mul_node->left  = root_node;
-            mul_node->right = this->parsePrimary();
+            mul_node->right = this->parseUnary();
             root_node = mul_node;
         }
         else if (this->checkNextToken("/"))
@@ -80,13 +80,44 @@ Node* Parser::parseMulDiv()
             Node* div_node  = new Node();
             div_node->type  = NodeType::DIV;
             div_node->left  = root_node;
-            div_node->right = this->parsePrimary();
+            div_node->right = this->parseUnary();
             root_node = div_node;
         }
         else
         {
             return root_node;
         }
+    }
+}
+
+Node* Parser::parseUnary()
+{
+    // 次のトークンが空白文字の場合、次の文字まで飛ばす
+    while (this->checkNextToken(" "))
+    {}
+
+    if (checkNextToken("+"))    // 前置演算子'+'の場合はそのまま次の式を解析
+    {
+        return this->parsePrimary();
+    }
+    else if (checkNextToken("-"))    // 前置演算子'-'の場合
+    {
+        /* 0の数値ノードを生成 */
+        Node* zero_node = new Node();
+        zero_node->type = NodeType::NUM;
+        zero_node->value = 0;
+
+        /* 0-(num)の形でノード生成 */
+        Node* node = new Node();
+        node->type = NodeType::SUB;
+        node->left = zero_node;
+        node->right = this->parsePrimary();
+
+        return node;
+    }
+    else    // 前置演算子無しの式を解析
+    {
+        return this->parsePrimary();
     }
 }
 
