@@ -84,7 +84,7 @@ int main(int argc, char** argv)
 
     /* プログラムをトークンに変換 */
     std::vector<Token*> token_list;
-    token_list = Token::strToToken(text_input.getNewLine());
+    token_list = Token::strToToken(std::string(std::istreambuf_iterator<char>(text_input.fs), std::istreambuf_iterator<char>()));
 
     /* 変換されたトークンの一覧を出力 */
     if (token_flag)

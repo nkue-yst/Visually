@@ -21,7 +21,6 @@ public:
 
     std::string getNewLine();
 
-private:
     // 入力ファイルストリーム
     std::ifstream fs;
 

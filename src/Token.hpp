@@ -20,6 +20,7 @@ enum class TokenType
     L_BRACE,      // '('
     R_BRACE,      // ')'
     SPACE,        // 空白文字
+    EOL,          // 改行文字
     TK_EOF,       // 終端文字
     UNDEFINED,    // 未定義
 };

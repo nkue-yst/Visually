@@ -35,7 +35,12 @@ std::vector<Token*> Token::strToToken(std::string str)
         char ch = ch_str[0];
         Token* new_token = nullptr;
 
-        if (std::isspace(ch))    // 文字が空白文字の場合、何もせずに次の文字へ
+        if (ch =='\n')    // 改行文字の場合
+        {
+            new_token = new Token(TokenType::EOL, ch_str, 1);
+            ch_str++;
+        }
+        else if (std::isspace(ch))    // 文字が空白文字の場合、何もせずに次の文字へ
         {
             new_token = new Token(TokenType::SPACE, ch_str, 1);
             ch_str++;
@@ -108,6 +113,9 @@ std::ostream& operator<<(std::ostream& stream, const Token* token)
     case TokenType::SPACE:
         type = "SPACE";
         break;
+    case TokenType::EOL:
+        type = "EOL";
+        break;
     case TokenType::TK_EOF:
         type = "EOF";
         break;
@@ -120,14 +128,13 @@ std::ostream& operator<<(std::ostream& stream, const Token* token)
 
     char content[128];
     std::memset(content, 0, sizeof(content));
-    if (token->token_head != NULL)
-        std::strncpy(content, token->token_head, token->len);
-    else
-        std::strcpy(content, "NULL");
+    if (token->type == TokenType::EOL)  std::strcpy(content, "EOL");
+    else if (token->token_head != NULL) std::strncpy(content, token->token_head, token->len);
+    else                                std::strcpy(content, "NULL");
 
     stream << "[Token]"   << std::endl
-           << "type: "    << type << std::endl
-           << "content: " << content << std::endl
+           << "type: "    << type        << std::endl
+           << "content: " << content     << std::endl
            << "len: "     << token->len;
 
     return stream; 

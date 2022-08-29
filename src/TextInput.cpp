@@ -25,11 +25,3 @@ void TextInput::openFile(const char* file_name)
         Error::abort();
     }
 }
-
-std::string TextInput::getNewLine()
-{
-    std::string buff;
-    std::getline(this->fs, buff);
-
-    return buff;
-}
