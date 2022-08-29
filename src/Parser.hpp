@@ -16,11 +16,11 @@ class Parser
 public:
     Parser() noexcept;
 
-    struct Node* parse(std::vector<struct Token*>& token_list);
+    std::vector<struct Node*> parse(std::vector<struct Token*>& token_list);
 
 private:
     // 入力するプログラム
-    struct Node* parseProgram();
+    std::vector<struct Node*> parseProgram();
 
     // 加減算を解析
     struct Node* expression();

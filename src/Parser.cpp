@@ -16,16 +16,24 @@
 Parser::Parser() noexcept
 {}
 
-Node* Parser::parse(std::vector<Token*>& token_list)
+std::vector<Node*> Parser::parse(std::vector<Token*>& token_list)
 {
     this->parsing_token = token_list.begin();
 
     return this->parseProgram();
 }
 
-Node* Parser::parseProgram()
+std::vector<Node*> Parser::parseProgram()
 {
-    return this->expression();
+    std::vector<Node*> node_list;
+    node_list.push_back(this->expression());
+
+    while (this->checkNextToken(";") || this->checkNextToken("\n"))
+    {
+        node_list.push_back(this->expression());
+    }
+
+    return node_list;
 }
 
 Node* Parser::expression()

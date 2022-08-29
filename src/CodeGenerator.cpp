@@ -8,7 +8,17 @@
 #include "Node.hpp"
 #include "VirtualMachine.hpp"
 
-std::vector<Operation*> CodeGenerator::generateCode(Node* node) noexcept
+std::vector<Operation*> CodeGenerator::generateCode(std::vector<Node*> node_list) noexcept
+{
+    for (Node* node : node_list)
+    {
+        this->generate(node);
+    }
+
+    return this->operation_list;
+}
+
+void CodeGenerator::generate(Node* node) noexcept
 {
     switch (node->type)
     {
@@ -17,8 +27,8 @@ std::vector<Operation*> CodeGenerator::generateCode(Node* node) noexcept
         break;
 
     case NodeType::ADD:
-        this->generateCode(node->left);
-        this->generateCode(node->right);
+        this->generate(node->left);
+        this->generate(node->right);
 
         this->operation_list.push_back(new Operation(OperationType::POP, static_cast<int32_t>(Register::REG_0)));
         this->operation_list.push_back(new Operation(OperationType::POP, static_cast<int32_t>(Register::REG_1)));
@@ -26,8 +36,8 @@ std::vector<Operation*> CodeGenerator::generateCode(Node* node) noexcept
         break;
 
     case NodeType::SUB:
-        this->generateCode(node->left);
-        this->generateCode(node->right);
+        this->generate(node->left);
+        this->generate(node->right);
 
         this->operation_list.push_back(new Operation(OperationType::POP, static_cast<int32_t>(Register::REG_0)));
         this->operation_list.push_back(new Operation(OperationType::POP, static_cast<int32_t>(Register::REG_1)));
@@ -35,8 +45,8 @@ std::vector<Operation*> CodeGenerator::generateCode(Node* node) noexcept
         break;
 
     case NodeType::MUL:
-        this->generateCode(node->left);
-        this->generateCode(node->right);
+        this->generate(node->left);
+        this->generate(node->right);
 
         this->operation_list.push_back(new Operation(OperationType::POP, static_cast<int32_t>(Register::REG_0)));
         this->operation_list.push_back(new Operation(OperationType::POP, static_cast<int32_t>(Register::REG_1)));
@@ -44,8 +54,8 @@ std::vector<Operation*> CodeGenerator::generateCode(Node* node) noexcept
         break;
 
     case NodeType::DIV:
-        this->generateCode(node->left);
-        this->generateCode(node->right);
+        this->generate(node->left);
+        this->generate(node->right);
 
         this->operation_list.push_back(new Operation(OperationType::POP, static_cast<int32_t>(Register::REG_0)));
         this->operation_list.push_back(new Operation(OperationType::POP, static_cast<int32_t>(Register::REG_1)));
@@ -55,6 +65,4 @@ std::vector<Operation*> CodeGenerator::generateCode(Node* node) noexcept
     default:
         break;
     }
-
-    return this->operation_list;
 }

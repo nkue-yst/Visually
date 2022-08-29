@@ -69,7 +69,7 @@ int32_t VirtualMachine::run(std::vector<struct Operation*>& operation_list)
         op = *(++op_iter);
     }
 
-    return pop();    // スタックのトップを実行結果とする
+    return this->pop();    // スタックのトップを実行結果として返す
 }
 
 void VirtualMachine::push(int32_t value)

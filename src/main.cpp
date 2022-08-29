@@ -99,24 +99,30 @@ int main(int argc, char** argv)
         std::cout << "\e[1A" << "--------------------------------" << std::endl << std::endl;
     }
 
-    Node* node = parser.parse(token_list);    // トークンから構文解析を行う（構文木のルートノードを取得）
+    std::vector<Node*> node_list = parser.parse(token_list);    // トークンから構文解析を行う（構文木のルートノードを取得）
 
     /* 生成されたノード一覧を出力 */
     if (node_flag)
     {
-        uint32_t depth = 0;
-
         std::cout << "---------- Node Info ----------" << std::endl;
 
-        std::cout << node << std::endl;    // ルートノードを出力
-        std::cout << "depth: " << depth++ << std::endl << std::endl;
+        for (Node* node : node_list)
+        {
+            uint32_t depth = 0;
+            uint32_t node_num = 1;
 
-        node->printChildren(depth);    // ルートノードから再帰的に全ノード情報を出力
+            std::cout << "--- <Node " << node_num++ << "> ---" << std::endl;
+
+            std::cout << node << std::endl;    // ルートノードを出力
+            std::cout << "depth: " << depth++ << std::endl << std::endl;
+
+            node->printChildren(depth);    // ルートノードから再帰的に全ノード情報を出力
+        }
 
         std::cout << "\e[1A" << "-------------------------------" << std::endl << std::endl;
     }
 
-    std::vector<Operation*> code_list = code_generator.generateCode(node);    // 実行用コードを生成
+    std::vector<Operation*> code_list = code_generator.generateCode(node_list);    // 実行用コードを生成
 
     /* 生成された命令列を出力 */
     if (code_flag)
@@ -135,7 +141,7 @@ int main(int argc, char** argv)
 
     std::cout << vm.run(code_list) << std::endl;    // 命令列を実行（実行結果を出力）
 
-    for (auto code : code_list) delete code;       // 生成した命令列の破棄
-    delete node;                                   // 生成したノードの破棄
+    for (auto code : code_list)   delete code;     // 生成した命令列の破棄
+    for (auto node : node_list)   delete node;     // 生成したノードの破棄
     for (auto token : token_list) delete token;    // 生成したトークンの破棄
 }

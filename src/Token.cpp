@@ -35,7 +35,7 @@ std::vector<Token*> Token::strToToken(std::string str)
         char ch = ch_str[0];
         Token* new_token = nullptr;
 
-        if (ch =='\n')    // 改行文字の場合
+        if (ch =='\n' || ch == ';')    // 改行文字の場合
         {
             new_token = new Token(TokenType::EOL, ch_str, 1);
             ch_str++;
