@@ -28,7 +28,7 @@ public:
     ~VirtualMachine();
 
     // プログラムを実行する
-    int32_t run(std::vector<struct Operation*>& operation_list);
+    int32_t run(std::vector<struct Operation*>& operation_list, bool log_flag);
 
 private:
     // 変数名から対応するポインタを検索
@@ -43,7 +43,16 @@ private:
     // スタックから値を取り出す
     int32_t pop();
 
-    // 命令列を入力するスタック
+    // レジスタ内のデータを出力
+    void printReg() noexcept;
+
+    // スタック内のデータを出力
+    void printStack() noexcept;
+
+    // 保持している変数一覧を出力
+    
+
+    // 値を保持するスタック
     int32_t stack[MAX_STACK_SIZE];
 
     // スタックポインタ
@@ -57,6 +66,9 @@ private:
 
     // 計算等処理用レジスタ
     int32_t reg[static_cast<int32_t>(Register::REG_NUM)];
+
+    // ログ出力フラグ
+    bool log_flag;
 };
 
 #endif

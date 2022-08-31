@@ -26,6 +26,7 @@ void printHelp(const char* exec_command)
                 << "    " << "-t" << "    Output read token list\n"
                 << "    " << "-n" << "    Output parsing node list\n"
                 << "    " << "-c" << "    Output generated code list\n"
+                << "    " << "-v" << "    Output virtual machine running log\n"
                 << std::endl;
 }
 
@@ -34,6 +35,7 @@ int main(int argc, char** argv)
     bool token_flag = false;    // トークン情報出力フラグ
     bool node_flag  = false;    // ノード情報出力フラグ
     bool code_flag  = false;    // 命令列出力フラグ
+    bool log_flag   = false;    // 実行時
 
     CodeGenerator code_generator;    // 命令列生成器
     Parser parser;                   // プログラム解析器
@@ -57,6 +59,9 @@ int main(int argc, char** argv)
                 break;
             case 'c':
                 code_flag = true;
+                break;
+            case 'v':
+                log_flag = true;
                 break;
             case 'h':
                 printHelp(argv[0]);
@@ -139,7 +144,7 @@ int main(int argc, char** argv)
         std::cout << "-------------------------------" << std::endl << std::endl;
     }
 
-    std::cout << vm.run(code_list) << std::endl;    // 命令列を実行（実行結果を出力）
+    std::cout << vm.run(code_list, log_flag) << std::endl;    // 命令列を実行（実行結果を出力）
 
     for (auto code : code_list)   delete code;     // 生成した命令列の破棄
     for (auto node : node_list)   delete node;     // 生成したノードの破棄
