@@ -50,7 +50,7 @@ private:
     void printStack() noexcept;
 
     // 保持している変数一覧を出力
-    
+    void printVars() noexcept;
 
     // 値を保持するスタック
     int32_t stack[MAX_STACK_SIZE];

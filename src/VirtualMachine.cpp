@@ -101,6 +101,7 @@ int32_t VirtualMachine::run(std::vector<struct Operation*>& operation_list, bool
         {
             this->printReg();
             this->printStack();
+            this->printVars();
         }
 
         op = *(++op_iter);
@@ -170,5 +171,16 @@ void VirtualMachine::printStack() noexcept
         if (read_ptr++ == this->sp + 1) break;
 
         std::cout << "    " << "|" << std::setw(5) << value << "|" << std::endl;
+    }
+}
+
+void VirtualMachine::printVars() noexcept
+{
+    std::cout << "\033[35m" << "    " << "[variable]" << "\033[m" << std::endl;
+
+    uint32_t index = 0;
+    for (Variable* var : this->var_list)
+    {
+        std::cout << "      " << "(" << index++ << ") " << var << std::endl;
     }
 }
