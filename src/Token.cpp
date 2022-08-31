@@ -23,56 +23,62 @@ Token::Token(TokenType type, const char* token_head, int32_t len) noexcept
     , len(len)
 {}
 
-std::vector<Token*> Token::strToToken(std::string str)
+std::vector<Token*> Token::strToToken(const char* str)
 {
     std::vector<Token*> token_list;    // 返り値とする解析したトークンリスト
 
-    const char* ch_str = str.c_str();
-
     /* 入力された文字列を1文字ずつ走査 */
-    while (*ch_str)
+    while (*str)
     {
-        char ch = ch_str[0];
+        char ch = str[0];
         Token* new_token = nullptr;
 
-        if (ch =='\n' || ch == ';')    // 改行文字の場合
+        if (ch == '\n' || ch == ';')    // 改行文字の場合
         {
-            new_token = new Token(TokenType::EOL, ch_str, 1);
-            ch_str++;
+            new_token = new Token(TokenType::EOL, str, 1);
+            str++;
         }
         else if (std::isspace(ch))    // 文字が空白文字の場合、何もせずに次の文字へ
         {
-            new_token = new Token(TokenType::SPACE, ch_str, 1);
-            ch_str++;
+            new_token = new Token(TokenType::SPACE, str, 1);
+            str++;
         }
         else if (std::isalpha(ch))    // a~z、A~Zであれば変数とする
         {
-            new_token = new Token(TokenType::IDENTIFIER, ch_str, 1);
-            ch_str++;
+            new_token = new Token(TokenType::IDENTIFIER, str, 1);
+
+            while (true)    // 複数文字の場合
+            {
+                str++;
+                ch = str[0];
+
+                if (std::isalpha(ch)) new_token->len++;
+                else break;
+            }
         }
         else if (ch == '+' || ch == '-' || ch == '*' || ch == '/' || ch == '=')    // 文字が演算子の場合
         {
-            new_token = new Token(TokenType::OP, ch_str, 1);
-            ch_str++;
+            new_token = new Token(TokenType::OP, str, 1);
+            str++;
         }
         else if (ch == '(')
         {
-            new_token = new Token(TokenType::L_BRACE, ch_str, 1);
-            ch_str++;
+            new_token = new Token(TokenType::L_BRACE, str, 1);
+            str++;
         }
         else if (ch == ')')
         {
-            new_token = new Token(TokenType::R_BRACE, ch_str, 1);
-            ch_str++;
+            new_token = new Token(TokenType::R_BRACE, str, 1);
+            str++;
         }
         else if (std::isdigit(ch))    // 文字が数値の場合
         {
-            new_token = new Token(TokenType::NUM, ch_str, 1);
+            new_token = new Token(TokenType::NUM, str, 1);
 
             while (true)    // 複数桁の場合
             {
-                ch_str++;
-                ch = ch_str[0];
+                str++;
+                ch = str[0];
 
                 if (std::isdigit(ch))
                 {
@@ -93,7 +99,7 @@ std::vector<Token*> Token::strToToken(std::string str)
         token_list.push_back(new_token);
     }
 
-    Token* eof_token = new Token(TokenType::TK_EOF, NULL, 0);
+    Token* eof_token = new Token(TokenType::TK_EOF, nullptr, 0);
     token_list.push_back(eof_token);
 
     return token_list;
@@ -134,7 +140,7 @@ std::ostream& operator<<(std::ostream& stream, const Token* token)
         break;
     }
 
-    static char content[64];
+    char content[512];
     std::memset(content, 0, sizeof(content));
     if (token->type == TokenType::EOL)         std::strcpy(content, "EOL");
     else if (token->type == TokenType::TK_EOF) std::strcpy(content, "EOF");

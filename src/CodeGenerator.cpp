@@ -67,7 +67,7 @@ void CodeGenerator::generate(Node* node) noexcept
 
         this->operation_list.push_back(new Operation(POP, Int32(Register::REG_0)));
         this->operation_list.push_back(new Operation(POP, Int32(Register::REG_1)));
-        this->operation_list.push_back(new Operation(MUL, Int32(Register::REG_1), Int32(Register::REG_0)));
+        this->operation_list.push_back(new Operation(DIV, Int32(Register::REG_1), Int32(Register::REG_0)));
         break;
 
     case NodeType::ASSIGN:

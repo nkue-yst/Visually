@@ -34,7 +34,7 @@ public:
     Token(TokenType type, const char* token_head, int32_t len) noexcept;
 
     // 入力文字列をトークンに変換する
-    static std::vector<Token*> strToToken(std::string str);
+    static std::vector<Token*> strToToken(const char* str);
 
     // トークンの種類
     TokenType type;
