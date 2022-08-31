@@ -7,7 +7,7 @@
 #ifndef __VARIABLE_HPP__
 #define __VARIABLE_HPP__
 
-#include <any>
+#include <variant>
 #include <string>
 
 /* 変数情報を保管するクラス */
@@ -20,7 +20,7 @@ public:
 
     std::string name;    // 変数名
 
-    std::any value;
+    std::variant<int32_t> value;
 };
 
 #endif
