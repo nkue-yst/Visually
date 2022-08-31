@@ -43,6 +43,8 @@ Node* Parser::expression()
     {}
 
     Token* token = *(this->parsing_token);
+
+    /* 識別子（変数名）の場合 */
     if (token->type == TokenType::IDENTIFIER)
     {
         this->parsing_token++;
@@ -55,7 +57,10 @@ Node* Parser::expression()
         {
             Node* identifier_node = new Node();
             identifier_node->type = NodeType::IDENTIFIER;
-            identifier_node->var_name = token->token_head[0];
+            char var_name[64];
+            memset(var_name, 0, sizeof(var_name));
+            std::strncpy(var_name, token->token_head, token->len);
+            identifier_node->var_name = var_name;
 
             Node* assign_node = new Node();
             assign_node->type = NodeType::ASSIGN;

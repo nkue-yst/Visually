@@ -60,10 +60,24 @@ std::vector<Token*> Token::strToToken(std::string str)
             new_token = new Token(TokenType::R_BRACE, ch_str, 1);
             ch_str++;
         }
-        else if ('a' <= ch && ch <= 'z')    // a~zであれば変数とする
+        else if (('a' <= ch && ch <= 'z') || ('A' <= ch && ch <= 'Z'))    // a~z、A~Zであれば変数とする
         {
             new_token = new Token(TokenType::IDENTIFIER, ch_str, 1);
-            ch_str++;
+
+            while (true)    // 複数文字の場合
+            {
+                ch_str++;
+                ch = ch_str[0];
+
+                if (('a' <= ch && ch <= 'z') || ('A' <= ch && ch <= 'Z'))
+                {
+                    new_token->len++;
+                }
+                else
+                {
+                    break;
+                }
+            }
         }
         else if (std::isdigit(ch))    // 文字が数値の場合
         {
