@@ -5,12 +5,14 @@
  */
 
 #include "VirtualMachine.hpp"
-#include "Error.hpp"
-#include "Operation.hpp"
-
-#include <SDL.h>
 
 #include <iostream>
+
+#include "Error.hpp"
+#include "Operation.hpp"
+#include "Variable.hpp"
+
+#include <SDL.h>
 
 VirtualMachine::VirtualMachine()
 {
@@ -46,6 +48,10 @@ int32_t VirtualMachine::run(std::vector<struct Operation*>& operation_list)
             this->reg[op->first_operand] = pop();
             break;
 
+        case OperationType::READ:
+            this->vp = this->findVariable(static_cast<ReadOperation*>(op)->var_name);
+            break;
+
         case OperationType::ADD:
             this->push(this->reg[op->first_operand] + this->reg[op->second_operand]);
             break;
@@ -62,6 +68,10 @@ int32_t VirtualMachine::run(std::vector<struct Operation*>& operation_list)
             this->push(this->reg[op->first_operand] / this->reg[op->second_operand]);
             break;
 
+        case OperationType::ASSIGN:
+            this->vp->value = this->reg[0];
+            break;
+
         default:
             break;
         }
@@ -70,6 +80,27 @@ int32_t VirtualMachine::run(std::vector<struct Operation*>& operation_list)
     }
 
     return this->pop();    // スタックのトップを実行結果として返す
+}
+
+Variable* VirtualMachine::findVariable(std::string name)
+{
+    for (Variable* var : this->var_list)
+    {
+        if (var->name == name)
+        {
+            return var;
+        }
+    }
+    
+    return this->generateVariable(name);
+}
+
+Variable* VirtualMachine::generateVariable(std::string name)
+{
+    Variable* new_var = new Variable(name);
+    this->var_list.push_back(new_var);
+
+    return new_var;
 }
 
 void VirtualMachine::push(int32_t value)

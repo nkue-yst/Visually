@@ -8,6 +8,7 @@
 #define __VIRTUAL_MACHINE_HPP__
 
 #include <cstdint>
+#include <string>
 #include <vector>
 
 // スタックのサイズを定義
@@ -30,6 +31,12 @@ public:
     int32_t run(std::vector<struct Operation*>& operation_list);
 
 private:
+    // 変数名から対応するポインタを検索
+    struct Variable* findVariable(std::string name);
+
+    // 未定義の変数を定義
+    struct Variable* generateVariable(std::string name);
+
     // スタックに値を追加する
     void push(int32_t value);
 
@@ -41,6 +48,12 @@ private:
 
     // スタックポインタ
     int32_t* sp;
+
+    // 変数を格納する
+    std::vector<struct Variable*> var_list;
+
+    // 変数一時読み出し用
+    struct Variable* vp;
 
     // 計算等処理用レジスタ
     int32_t reg[static_cast<int32_t>(Register::REG_NUM)];

@@ -20,6 +20,8 @@ enum class NodeType
     SUB,          // 減算演算子
     MUL,          // 乗算
     DIV,          // 除算
+    ASSIGN,       // 代入演算子
+    IDENTIFIER,   // 識別子
     UNDIFINED,    // 未定義
 };
 
@@ -32,6 +34,7 @@ public:
         , left(nullptr)
         , right(nullptr)
         , value(0)
+        , var_name("")
     {}
 
     ~Node() noexcept
@@ -71,6 +74,9 @@ public:
 
     // 数値を格納
     int32_t value;
+
+    // 変数の場合の変数名
+    std::string var_name;
 };
 
 // ノード情報出力処理
@@ -95,6 +101,12 @@ static std::ostream& operator<<(std::ostream& stream, const Node* node)
     case NodeType::DIV:
         type = "DIV";
         break;
+    case NodeType::ASSIGN:
+        type = "ASSIGN";
+        break;
+    case NodeType::IDENTIFIER:
+        type = "IDENTIFIER";
+        break;
     default:
         break;
     }
@@ -104,6 +116,8 @@ static std::ostream& operator<<(std::ostream& stream, const Node* node)
 
     if (node->type == NodeType::NUM)
         stream << std::endl << "value: " << node->value;
+    else if (node->type == NodeType::IDENTIFIER)
+        stream << std::endl << "name: " << node->var_name;
 
     return stream;
 }

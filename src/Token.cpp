@@ -45,7 +45,7 @@ std::vector<Token*> Token::strToToken(std::string str)
             new_token = new Token(TokenType::SPACE, ch_str, 1);
             ch_str++;
         }
-        else if (ch == '+' || ch == '-' || ch == '*' || ch == '/')    // 文字が演算子の場合
+        else if (ch == '+' || ch == '-' || ch == '*' || ch == '/' || ch == '=')    // 文字が演算子の場合
         {
             new_token = new Token(TokenType::OP, ch_str, 1);
             ch_str++;
@@ -58,6 +58,11 @@ std::vector<Token*> Token::strToToken(std::string str)
         else if (ch == ')')
         {
             new_token = new Token(TokenType::R_BRACE, ch_str, 1);
+            ch_str++;
+        }
+        else if ('a' <= ch && ch <= 'z')    // a~zであれば変数とする
+        {
+            new_token = new Token(TokenType::IDENTIFIER, ch_str, 1);
             ch_str++;
         }
         else if (std::isdigit(ch))    // 文字が数値の場合
@@ -105,6 +110,9 @@ std::ostream& operator<<(std::ostream& stream, const Token* token)
         break;
     case TokenType::OP:
         type = "OP";
+        break;
+    case TokenType::IDENTIFIER:
+        type = "IDENTIFIER";
         break;
     case TokenType::L_BRACE:
     case TokenType::R_BRACE:

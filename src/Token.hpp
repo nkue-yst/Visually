@@ -17,6 +17,7 @@ enum class TokenType
 {
     NUM,          // 数値
     OP,           // 演算子
+    IDENTIFIER,   // 識別子（変数）
     L_BRACE,      // '('
     R_BRACE,      // ')'
     SPACE,        // 空白文字

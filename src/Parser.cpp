@@ -38,6 +38,39 @@ std::vector<Node*> Parser::parseProgram()
 
 Node* Parser::expression()
 {
+    // 次のトークンが空白文字の場合、次の文字まで飛ばす
+    while (this->checkNextToken(" "))
+    {}
+
+    Token* token = *(this->parsing_token);
+    if (token->type == TokenType::IDENTIFIER)
+    {
+        this->parsing_token++;
+
+        // 次のトークンが空白文字の場合、次の文字まで飛ばす
+        while (this->checkNextToken(" "))
+        {}
+
+        if (this->checkNextToken("="))
+        {
+            Node* identifier_node = new Node();
+            identifier_node->type = NodeType::IDENTIFIER;
+            identifier_node->var_name = token->token_head[0];
+
+            Node* assign_node = new Node();
+            assign_node->type = NodeType::ASSIGN;
+            assign_node->left = identifier_node;
+            assign_node->right = this->parseAddSub();
+
+            return assign_node;
+        }
+    }
+
+    return this->parseAddSub();
+}
+
+Node* Parser::parseAddSub()
+{
     Node* root_node = this->parseMulDiv();     // まずは乗算・除算を解析
 
     while (true)

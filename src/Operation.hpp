@@ -8,32 +8,30 @@
 #define __OPERATION_HPP__
 
 #include <cstdint>
-#include <iostream>
+#include <iosfwd>
 #include <string>
 
 /* 命令コードの種類 */
 enum class OperationType
 {
-    PUSH,
-    POP,
-    ADD,
-    SUB,
-    MUL,
-    DIV,
+    PUSH, POP,
+    READ,
+    ADD,  SUB, MUL, DIV,
+    ASSIGN,
     UNDEFINED,
 };
 
-/* 命令列の定義 */
+/* 命令列ベースの定義 */
 struct Operation
 {
 public:
     Operation() noexcept
         : type(OperationType::UNDEFINED)
-        , first_operand(0)
-        , second_operand(0)
+        , first_operand(-1)
+        , second_operand(-1)
     {}
 
-    Operation(OperationType type, int32_t first_operand, int32_t second_operand = 0) noexcept
+    Operation(OperationType type, int32_t first_operand = -1, int32_t second_operand = -1) noexcept
         : type(type)
         , first_operand(first_operand)
         , second_operand(second_operand)
@@ -45,34 +43,18 @@ public:
     int32_t second_operand;
 };
 
-// 生成した命令列の出力処理
-static std::ostream& operator<<(std::ostream& stream, const Operation* op)
+/* 変数アドレスの読み込み命令列の定義 */
+struct ReadOperation : public Operation
 {
-    switch (op->type)
-    {
-    case OperationType::PUSH:
-        stream << "PUSH (" << op->first_operand << ")";
-        break;
-    case OperationType::POP:
-        stream << "POP  (Reg_" << op->first_operand << ")";
-        break;
-    case OperationType::ADD:
-        stream << "ADD  (Reg_" << op->first_operand << ", Reg_" << op->second_operand << ")";
-        break;
-    case OperationType::SUB:
-        stream << "SUB  (Reg_" << op->first_operand << ", Reg_" << op->second_operand << ")";
-        break;
-    case OperationType::MUL:
-        stream << "MUL  (Reg_" << op->first_operand << ", Reg_" << op->second_operand << ")";
-        break;
-    case OperationType::DIV:
-        stream << "DIV  (Reg_" << op->first_operand << ", Reg_" << op->second_operand << ")";
-        break;
-    default:
-        break;
-    }
+public:
+    ReadOperation(std::string var_name) noexcept
+        : Operation(OperationType::READ)
+        , var_name(var_name)
+    {}
 
-    return stream;
-}
+    std::string var_name;
+};
+
+std::ostream& operator<<(std::ostream& stream, const Operation* op) noexcept;
 
 #endif

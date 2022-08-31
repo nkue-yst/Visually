@@ -22,8 +22,11 @@ private:
     // 入力するプログラム
     std::vector<struct Node*> parseProgram();
 
-    // 加減算を解析
+    // プログラム本文の解析
     struct Node* expression();
+
+    // 加減算を解析
+    struct Node* parseAddSub();
 
     // 乗除算を解析
     struct Node* parseMulDiv();

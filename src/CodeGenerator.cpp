@@ -5,8 +5,14 @@
  */
 
 #include "CodeGenerator.hpp"
+
 #include "Node.hpp"
+#include "Variable.hpp"
 #include "VirtualMachine.hpp"
+#include "Visually.hpp"
+
+CodeGenerator::CodeGenerator() noexcept
+{}
 
 std::vector<Operation*> CodeGenerator::generateCode(std::vector<Node*> node_list) noexcept
 {
@@ -20,49 +26,82 @@ std::vector<Operation*> CodeGenerator::generateCode(std::vector<Node*> node_list
 
 void CodeGenerator::generate(Node* node) noexcept
 {
+    using enum OperationType;
+
     switch (node->type)
     {
     case NodeType::NUM:
-        this->operation_list.push_back(new Operation(OperationType::PUSH, node->value));
+        this->operation_list.push_back(new Operation(PUSH, node->value));
         break;
 
     case NodeType::ADD:
         this->generate(node->left);
         this->generate(node->right);
 
-        this->operation_list.push_back(new Operation(OperationType::POP, static_cast<int32_t>(Register::REG_0)));
-        this->operation_list.push_back(new Operation(OperationType::POP, static_cast<int32_t>(Register::REG_1)));
-        this->operation_list.push_back(new Operation(OperationType::ADD, static_cast<int32_t>(Register::REG_0), static_cast<int32_t>(Register::REG_1)));
+        this->operation_list.push_back(new Operation(POP, Int32(Register::REG_0)));
+        this->operation_list.push_back(new Operation(POP, Int32(Register::REG_1)));
+        this->operation_list.push_back(new Operation(ADD, Int32(Register::REG_0), Int32(Register::REG_1)));
         break;
 
     case NodeType::SUB:
         this->generate(node->left);
         this->generate(node->right);
 
-        this->operation_list.push_back(new Operation(OperationType::POP, static_cast<int32_t>(Register::REG_0)));
-        this->operation_list.push_back(new Operation(OperationType::POP, static_cast<int32_t>(Register::REG_1)));
-        this->operation_list.push_back(new Operation(OperationType::SUB, static_cast<int32_t>(Register::REG_1), static_cast<int32_t>(Register::REG_0)));
+        this->operation_list.push_back(new Operation(POP, Int32(Register::REG_0)));
+        this->operation_list.push_back(new Operation(POP, Int32(Register::REG_1)));
+        this->operation_list.push_back(new Operation(SUB, Int32(Register::REG_1), Int32(Register::REG_0)));
         break;
 
     case NodeType::MUL:
         this->generate(node->left);
         this->generate(node->right);
 
-        this->operation_list.push_back(new Operation(OperationType::POP, static_cast<int32_t>(Register::REG_0)));
-        this->operation_list.push_back(new Operation(OperationType::POP, static_cast<int32_t>(Register::REG_1)));
-        this->operation_list.push_back(new Operation(OperationType::MUL, static_cast<int32_t>(Register::REG_0), static_cast<int32_t>(Register::REG_1)));
+        this->operation_list.push_back(new Operation(POP, Int32(Register::REG_0)));
+        this->operation_list.push_back(new Operation(POP, Int32(Register::REG_1)));
+        this->operation_list.push_back(new Operation(MUL, Int32(Register::REG_0), Int32(Register::REG_1)));
         break;
 
     case NodeType::DIV:
         this->generate(node->left);
         this->generate(node->right);
 
-        this->operation_list.push_back(new Operation(OperationType::POP, static_cast<int32_t>(Register::REG_0)));
-        this->operation_list.push_back(new Operation(OperationType::POP, static_cast<int32_t>(Register::REG_1)));
-        this->operation_list.push_back(new Operation(OperationType::MUL, static_cast<int32_t>(Register::REG_1), static_cast<int32_t>(Register::REG_0)));
+        this->operation_list.push_back(new Operation(POP, Int32(Register::REG_0)));
+        this->operation_list.push_back(new Operation(POP, Int32(Register::REG_1)));
+        this->operation_list.push_back(new Operation(MUL, Int32(Register::REG_1), Int32(Register::REG_0)));
+        break;
+
+    case NodeType::ASSIGN:
+        this->generate(node->left);
+        this->generate(node->right);
+
+        this->operation_list.push_back(new Operation(POP, Int32(Register::REG_0)));
+        this->operation_list.push_back(new Operation(ASSIGN));
+        break;
+
+    case NodeType::IDENTIFIER:
+        this->findVariable(node->var_name);
+        this->operation_list.push_back(new ReadOperation(node->var_name));
         break;
 
     default:
         break;
     }
+}
+
+void CodeGenerator::findVariable(std::string name) noexcept
+{
+    for (Variable* var : this->var_list)
+    {
+        if (var->name == name)
+        {
+            return;
+        }
+    }
+    
+    this->generateVariable(name);
+}
+
+void CodeGenerator::generateVariable(std::string name) noexcept
+{
+    this->var_list.push_back(new Variable(name));
 }
