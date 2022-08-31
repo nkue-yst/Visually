@@ -14,8 +14,8 @@
 /* 命令コードの種類 */
 enum class OperationType
 {
-    PUSH, POP,
-    READ,
+    PUSH, PUSH_R, POP,
+    READ, LOAD,
     ADD,  SUB, MUL, DIV,
     ASSIGN,
     UNDEFINED,

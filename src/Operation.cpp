@@ -16,11 +16,17 @@ std::ostream& operator<<(std::ostream& stream, const Operation* op) noexcept
     case OperationType::PUSH:
         stream << "PUSH   (" << op->first_operand << ")";
         break;
+    case OperationType::PUSH_R:
+        stream << "PUSH_R (Reg_" << op->first_operand << ")";
+        break;
     case OperationType::POP:
         stream << "POP    (Reg_" << op->first_operand << ")";
         break;
     case OperationType::READ:
         stream << "READ   (" << static_cast<const ReadOperation*>(op)->var_name << ")";
+        break;
+    case OperationType::LOAD:
+        stream << "LOAD   (Reg_" << op->first_operand << ")";
         break;
     case OperationType::ADD:
         stream << "ADD    (Reg_" << op->first_operand << ", Reg_" << op->second_operand << ")";

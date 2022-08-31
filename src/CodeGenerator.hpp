@@ -27,7 +27,7 @@ private:
     void generateVariable(std::string name) noexcept;
 
     // 変数が既に存在するか検索する
-    void findVariable(std::string name) noexcept;
+    bool findVariable(std::string name) noexcept;
 
     std::vector<struct Variable*> var_list;
 

@@ -6,6 +6,7 @@
 
 #include "CodeGenerator.hpp"
 
+#include "Error.hpp"
 #include "Node.hpp"
 #include "Variable.hpp"
 #include "VirtualMachine.hpp"
@@ -71,16 +72,28 @@ void CodeGenerator::generate(Node* node) noexcept
         break;
 
     case NodeType::ASSIGN:
-        this->generate(node->left);
         this->generate(node->right);
 
+        this->generate(node->left);
         this->operation_list.push_back(new Operation(POP, Int32(Register::REG_0)));
         this->operation_list.push_back(new Operation(ASSIGN));
         break;
 
     case NodeType::IDENTIFIER:
-        this->findVariable(node->var_name);
+        if (!this->findVariable(node->var_name))
+            this->generateVariable(node->var_name);
         this->operation_list.push_back(new ReadOperation(node->var_name));
+        break;
+
+    case NodeType::ID_VAR:
+        if (!this->findVariable(node->var_name))
+        {
+            Error::setErrorMsg("uninit var");
+            Error::abort();
+        }
+        this->operation_list.push_back(new ReadOperation(node->var_name));
+        this->operation_list.push_back(new Operation(LOAD, Int32(Register::REG_0)));
+        this->operation_list.push_back(new Operation(PUSH_R, Int32(Register::REG_0)));
         break;
 
     default:
@@ -88,20 +101,19 @@ void CodeGenerator::generate(Node* node) noexcept
     }
 }
 
-void CodeGenerator::findVariable(std::string name) noexcept
+void CodeGenerator::generateVariable(std::string name) noexcept
+{
+    this->var_list.push_back(new Variable(name));
+}
+
+bool CodeGenerator::findVariable(std::string name) noexcept
 {
     for (Variable* var : this->var_list)
     {
         if (var->name == name)
         {
-            return;
+            return true;
         }
     }
-    
-    this->generateVariable(name);
-}
-
-void CodeGenerator::generateVariable(std::string name) noexcept
-{
-    this->var_list.push_back(new Variable(name));
+    return false;
 }

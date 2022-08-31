@@ -22,6 +22,7 @@ enum class NodeType
     DIV,          // 除算
     ASSIGN,       // 代入演算子
     IDENTIFIER,   // 識別子
+    ID_VAR,       // 変数
     UNDIFINED,    // 未定義
 };
 
@@ -107,6 +108,9 @@ static std::ostream& operator<<(std::ostream& stream, const Node* node)
     case NodeType::IDENTIFIER:
         type = "IDENTIFIER";
         break;
+    case NodeType::ID_VAR:
+        type = "ID_VAR";
+        break;
     default:
         break;
     }
@@ -116,7 +120,7 @@ static std::ostream& operator<<(std::ostream& stream, const Node* node)
 
     if (node->type == NodeType::NUM)
         stream << std::endl << "value: " << node->value;
-    else if (node->type == NodeType::IDENTIFIER)
+    else if (node->type == NodeType::IDENTIFIER || node->type == NodeType::ID_VAR)
         stream << std::endl << "name: " << node->var_name;
 
     return stream;

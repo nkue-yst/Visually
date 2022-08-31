@@ -63,6 +63,10 @@ int32_t VirtualMachine::run(std::vector<struct Operation*>& operation_list, bool
         case OperationType::PUSH:    // スタックへプッシュ
             this->push(op->first_operand);
             break;
+        
+        case OperationType::PUSH_R:
+            this->push(this->reg[op->first_operand]);
+            break;
 
         case OperationType::POP:    // スタックからポップ
             this->reg[op->first_operand] = pop();
@@ -70,6 +74,10 @@ int32_t VirtualMachine::run(std::vector<struct Operation*>& operation_list, bool
 
         case OperationType::READ:    // 変数を一時読み出しポインタに読み出す
             this->vp = this->findVariable(static_cast<ReadOperation*>(op)->var_name);
+            break;
+
+        case OperationType::LOAD:
+            this->reg[op->first_operand] = std::get<0>(this->vp->value);
             break;
 
         case OperationType::ADD:    // 加算演算

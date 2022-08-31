@@ -69,6 +69,11 @@ Node* Parser::expression()
 
             return assign_node;
         }
+        else
+        {
+            Error::setErrorMsg("invalid expression");
+            Error::abort();
+        }
     }
 
     return this->parseAddSub();
@@ -194,8 +199,20 @@ Node* Parser::parseNum()
     Token* target_token = *(this->parsing_token);
 
     Node* node = new Node();
-    node->type = NodeType::NUM;
-    node->value = std::atoi(target_token->token_head);
+
+    if (target_token->type == TokenType::IDENTIFIER)    // 変数の場合
+    {
+        node->type = NodeType::ID_VAR;
+        char var_name[512];
+        memset(var_name, 0, sizeof(var_name));
+        std::strncpy(var_name, target_token->token_head, target_token->len);
+        node->var_name = var_name;
+    }
+    else if (target_token->type == TokenType::NUM)    // 整数定数の場合
+    {
+        node->type = NodeType::NUM;
+        node->value = std::atoi(target_token->token_head);
+    }
 
     this->parsing_token++;
 

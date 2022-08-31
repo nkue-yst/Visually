@@ -17,8 +17,9 @@ namespace Error
         { "no source",          "ソースプログラムを指定してください" },
         { "cannot open source", "ソースプログラムが開けませんでした" },
         { "invalid char",       "不正な文字が含まれています" },
-        { "invalid expression", "不正な式が含まれています"},
-        { "failed to init sdl", "SDLの初期化に失敗しました"},
+        { "invalid expression", "不正な式が含まれています" },
+        { "uninit var",         "初期化されていない変数が使用されています" },
+        { "failed to init sdl", "SDLの初期化に失敗しました" },
     };
 
     void abort() noexcept
