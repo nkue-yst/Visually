@@ -91,20 +91,14 @@ int main(int argc, char** argv)
     std::vector<Token*> token_list;
     token_list = Token::strToToken(std::string(std::istreambuf_iterator<char>(text_input.fs), std::istreambuf_iterator<char>()));
 
-    /* 変換されたトークンの一覧を出力 */
-    if (token_flag)
-    {
-        std::cout << "---------- Token Info ----------" << std::endl;
+    /* 生成されたトークン一覧を出力 */
+    std::cout << "---------- Token Info ----------" << std::endl;
+    for (Token* token : token_list)
+        std::cout << token << std::endl << std::endl;
+    std::cout << "\e[1A" << "--------------------------------" << std::endl << std::endl;
 
-        for (Token* token : token_list)
-        {
-            std::cout << token << std::endl << std::endl;
-        }
-
-        std::cout << "\e[1A" << "--------------------------------" << std::endl << std::endl;
-    }
-
-    std::vector<Node*> node_list = parser.parse(token_list);    // トークンから構文解析を行う（構文木のルートノードを取得）
+    /* トークンから構文解析を行う（構文木のルートノードを取得） */
+    std::vector<Node*> node_list = parser.parse(token_list);
 
     /* 生成されたノード一覧を出力 */
     if (node_flag)

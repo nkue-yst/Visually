@@ -45,6 +45,11 @@ std::vector<Token*> Token::strToToken(std::string str)
             new_token = new Token(TokenType::SPACE, ch_str, 1);
             ch_str++;
         }
+        else if (std::isalpha(ch))    // a~z、A~Zであれば変数とする
+        {
+            new_token = new Token(TokenType::IDENTIFIER, ch_str, 1);
+            ch_str++;
+        }
         else if (ch == '+' || ch == '-' || ch == '*' || ch == '/' || ch == '=')    // 文字が演算子の場合
         {
             new_token = new Token(TokenType::OP, ch_str, 1);
@@ -59,25 +64,6 @@ std::vector<Token*> Token::strToToken(std::string str)
         {
             new_token = new Token(TokenType::R_BRACE, ch_str, 1);
             ch_str++;
-        }
-        else if (('a' <= ch && ch <= 'z') || ('A' <= ch && ch <= 'Z'))    // a~z、A~Zであれば変数とする
-        {
-            new_token = new Token(TokenType::IDENTIFIER, ch_str, 1);
-
-            while (true)    // 複数文字の場合
-            {
-                ch_str++;
-                ch = ch_str[0];
-
-                if (('a' <= ch && ch <= 'z') || ('A' <= ch && ch <= 'Z'))
-                {
-                    new_token->len++;
-                }
-                else
-                {
-                    break;
-                }
-            }
         }
         else if (std::isdigit(ch))    // 文字が数値の場合
         {
@@ -148,16 +134,16 @@ std::ostream& operator<<(std::ostream& stream, const Token* token)
         break;
     }
 
-    char content[128];
+    static char content[64];
     std::memset(content, 0, sizeof(content));
-    if (token->type == TokenType::EOL)  std::strcpy(content, "EOL");
-    else if (token->token_head != NULL) std::strncpy(content, token->token_head, token->len);
-    else                                std::strcpy(content, "NULL");
+    if (token->type == TokenType::EOL)         std::strcpy(content, "EOL");
+    else if (token->type == TokenType::TK_EOF) std::strcpy(content, "EOF");
+    else                                       std::strncpy(content, token->token_head, token->len);
 
     stream << "[Token]"   << std::endl
-           << "type: "    << type        << std::endl
+           << "type:    " << type        << std::endl
            << "content: " << content     << std::endl
-           << "len: "     << token->len;
+           << "len:     " << token->len;
 
     return stream; 
 }
