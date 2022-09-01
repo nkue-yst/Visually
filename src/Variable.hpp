@@ -27,7 +27,7 @@ public:
 
 static std::ostream& operator<<(std::ostream& stream, const Variable* var)
 {
-    stream << "name: "    << var->name << ", ";
+    stream << "name:  "    << var->name << ", ";
 
     std::visit([&stream](const auto& value)
     {

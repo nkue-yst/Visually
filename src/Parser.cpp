@@ -49,19 +49,19 @@ Node* Parser::expression()
     {
         this->parsing_token++;
 
+        Node* identifier_node = new Node();
+        identifier_node->type = NodeType::IDENTIFIER;
+        char var_name[64];
+        memset(var_name, 0, sizeof(var_name));
+        std::strncpy(var_name, token->token_head, token->len);
+        identifier_node->var_name = var_name;
+
         // 次のトークンが空白文字の場合、次の文字まで飛ばす
         while (this->checkNextToken(" "))
         {}
 
-        if (this->checkNextToken("="))
+        if (this->checkNextToken("="))    // 変数代入文
         {
-            Node* identifier_node = new Node();
-            identifier_node->type = NodeType::IDENTIFIER;
-            char var_name[64];
-            memset(var_name, 0, sizeof(var_name));
-            std::strncpy(var_name, token->token_head, token->len);
-            identifier_node->var_name = var_name;
-
             Node* assign_node = new Node();
             assign_node->type = NodeType::ASSIGN;
             assign_node->left = identifier_node;
@@ -71,8 +71,7 @@ Node* Parser::expression()
         }
         else
         {
-            Error::setErrorMsg("invalid expression");
-            Error::abort();
+            this->parsing_token--;
         }
     }
 
