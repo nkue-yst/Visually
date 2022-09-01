@@ -9,8 +9,6 @@
 #include "Error.hpp"
 #include "Node.hpp"
 #include "Variable.hpp"
-#include "VirtualMachine.hpp"
-#include "Visually.hpp"
 
 CodeGenerator::CodeGenerator() noexcept
 {}
@@ -22,7 +20,7 @@ std::vector<Operation*> CodeGenerator::generateCode(std::vector<Node*> node_list
         this->generate(node);
     }
 
-    return this->operation_list;
+    return this->op_list;
 }
 
 void CodeGenerator::generate(Node* node) noexcept
@@ -32,118 +30,118 @@ void CodeGenerator::generate(Node* node) noexcept
     switch (node->type)
     {
     case NodeType::NUM:
-        this->operation_list.push_back(new Operation(PUSH, node->value));
+        this->op_list.push_back(new Operation(PUSH, node->value));
         break;
 
     case NodeType::ADD:
         this->generate(node->left);
         this->generate(node->right);
 
-        this->operation_list.push_back(new Operation(POP, Int32(Register::REG_0)));
-        this->operation_list.push_back(new Operation(POP, Int32(Register::REG_1)));
-        this->operation_list.push_back(new Operation(ADD, Int32(Register::REG_0), Int32(Register::REG_1)));
+        this->op_list.push_back(new Operation(POP, Register::REG_0));
+        this->op_list.push_back(new Operation(POP, Register::REG_1));
+        this->op_list.push_back(new Operation(ADD, Register::REG_0, Register::REG_1));
         break;
 
     case NodeType::SUB:
         this->generate(node->left);
         this->generate(node->right);
 
-        this->operation_list.push_back(new Operation(POP, Int32(Register::REG_0)));
-        this->operation_list.push_back(new Operation(POP, Int32(Register::REG_1)));
-        this->operation_list.push_back(new Operation(SUB, Int32(Register::REG_1), Int32(Register::REG_0)));
+        this->op_list.push_back(new Operation(POP, Register::REG_0));
+        this->op_list.push_back(new Operation(POP, Register::REG_1));
+        this->op_list.push_back(new Operation(SUB, Register::REG_1, Register::REG_0));
         break;
 
     case NodeType::MUL:
         this->generate(node->left);
         this->generate(node->right);
 
-        this->operation_list.push_back(new Operation(POP, Int32(Register::REG_0)));
-        this->operation_list.push_back(new Operation(POP, Int32(Register::REG_1)));
-        this->operation_list.push_back(new Operation(MUL, Int32(Register::REG_0), Int32(Register::REG_1)));
+        this->op_list.push_back(new Operation(POP, Register::REG_0));
+        this->op_list.push_back(new Operation(POP, Register::REG_1));
+        this->op_list.push_back(new Operation(MUL, Register::REG_0, Register::REG_1));
         break;
 
     case NodeType::DIV:
         this->generate(node->left);
         this->generate(node->right);
 
-        this->operation_list.push_back(new Operation(POP, Int32(Register::REG_0)));
-        this->operation_list.push_back(new Operation(POP, Int32(Register::REG_1)));
-        this->operation_list.push_back(new Operation(DIV, Int32(Register::REG_1), Int32(Register::REG_0)));
+        this->op_list.push_back(new Operation(POP, Register::REG_0));
+        this->op_list.push_back(new Operation(POP, Register::REG_1));
+        this->op_list.push_back(new Operation(DIV, Register::REG_1, Register::REG_0));
         break;
 
     case NodeType::ASSIGN:
         this->generate(node->right);
 
         this->generate(node->left);
-        this->operation_list.push_back(new Operation(POP, Int32(Register::REG_0)));
-        this->operation_list.push_back(new Operation(ASSIGN));
+        this->op_list.push_back(new Operation(POP, Register::REG_0));
+        this->op_list.push_back(new Operation(ASSIGN));
         break;
 
     case NodeType::EQUAL:
         this->generate(node->left);
         this->generate(node->right);
 
-        this->operation_list.push_back(new Operation(POP,   Int32(Register::REG_0)));
-        this->operation_list.push_back(new Operation(POP,   Int32(Register::REG_1)));
-        this->operation_list.push_back(new Operation(EQUAL, Int32(Register::REG_0), Int32(Register::REG_1)));
+        this->op_list.push_back(new Operation(POP,   Register::REG_0));
+        this->op_list.push_back(new Operation(POP,   Register::REG_1));
+        this->op_list.push_back(new Operation(EQUAL, Register::REG_0, Register::REG_1));
         break;
 
     case NodeType::NEQUAL:
         this->generate(node->left);
         this->generate(node->right);
 
-        this->operation_list.push_back(new Operation(POP,    Int32(Register::REG_0)));
-        this->operation_list.push_back(new Operation(POP,    Int32(Register::REG_1)));
-        this->operation_list.push_back(new Operation(NEQUAL, Int32(Register::REG_0), Int32(Register::REG_1)));
+        this->op_list.push_back(new Operation(POP,    Register::REG_0));
+        this->op_list.push_back(new Operation(POP,    Register::REG_1));
+        this->op_list.push_back(new Operation(NEQUAL, Register::REG_0, Register::REG_1));
         break;
 
     case NodeType::LESS:
         this->generate(node->left);
         this->generate(node->right);
 
-        this->operation_list.push_back(new Operation(POP,  Int32(Register::REG_0)));
-        this->operation_list.push_back(new Operation(POP,  Int32(Register::REG_1)));
-        this->operation_list.push_back(new Operation(LESS, Int32(Register::REG_0), Int32(Register::REG_1)));
+        this->op_list.push_back(new Operation(POP,  Register::REG_0));
+        this->op_list.push_back(new Operation(POP,  Register::REG_1));
+        this->op_list.push_back(new Operation(LESS, Register::REG_0, Register::REG_1));
         break;
     
     case NodeType::GREATER:
         this->generate(node->left);
         this->generate(node->right);
 
-        this->operation_list.push_back(new Operation(POP,     Int32(Register::REG_0)));
-        this->operation_list.push_back(new Operation(POP,     Int32(Register::REG_1)));
-        this->operation_list.push_back(new Operation(GREATER, Int32(Register::REG_0), Int32(Register::REG_1)));
+        this->op_list.push_back(new Operation(POP,     Register::REG_0));
+        this->op_list.push_back(new Operation(POP,     Register::REG_1));
+        this->op_list.push_back(new Operation(GREATER, Register::REG_0, Register::REG_1));
         break;
 
     case NodeType::LESSEQ:
         this->generate(node->left);
         this->generate(node->right);
 
-        this->operation_list.push_back(new Operation(POP,    Int32(Register::REG_0)));
-        this->operation_list.push_back(new Operation(POP,    Int32(Register::REG_1)));
-        this->operation_list.push_back(new Operation(LESSEQ, Int32(Register::REG_0), Int32(Register::REG_1)));
+        this->op_list.push_back(new Operation(POP,    Register::REG_0));
+        this->op_list.push_back(new Operation(POP,    Register::REG_1));
+        this->op_list.push_back(new Operation(LESSEQ, Register::REG_0, Register::REG_1));
         break;
 
     case NodeType::GREATEREQ:
         this->generate(node->left);
         this->generate(node->right);
 
-        this->operation_list.push_back(new Operation(POP,       Int32(Register::REG_0)));
-        this->operation_list.push_back(new Operation(POP,       Int32(Register::REG_1)));
-        this->operation_list.push_back(new Operation(GREATEREQ, Int32(Register::REG_0), Int32(Register::REG_1)));
+        this->op_list.push_back(new Operation(POP,       Register::REG_0));
+        this->op_list.push_back(new Operation(POP,       Register::REG_1));
+        this->op_list.push_back(new Operation(GREATEREQ, Register::REG_0, Register::REG_1));
         break;
 
     case NodeType::RETURN:
         this->generate(node->left);
 
-        this->operation_list.push_back(new Operation(POP, Int32(Register::REG_0)));
-        this->operation_list.push_back(new Operation(RETURN, Int32(Register::REG_0)));
+        this->op_list.push_back(new Operation(POP, Register::REG_0));
+        this->op_list.push_back(new Operation(RETURN, Register::REG_0));
         break;
 
     case NodeType::IDENTIFIER:
         if (!this->findVariable(node->var_name))
             this->generateVariable(node->var_name);
-        this->operation_list.push_back(new ReadOperation(node->var_name));
+        this->op_list.push_back(new ReadOperation(node->var_name));
         break;
 
     case NodeType::ID_VAR:
@@ -152,9 +150,9 @@ void CodeGenerator::generate(Node* node) noexcept
             Error::setErrorMsg("uninit var");
             Error::abort();
         }
-        this->operation_list.push_back(new ReadOperation(node->var_name));
-        this->operation_list.push_back(new Operation(LOAD, Int32(Register::REG_0)));
-        this->operation_list.push_back(new Operation(PUSH_R, Int32(Register::REG_0)));
+        this->op_list.push_back(new ReadOperation(node->var_name));
+        this->op_list.push_back(new Operation(LOAD, Register::REG_0));
+        this->op_list.push_back(new Operation(PUSH_R, Register::REG_0));
         break;
 
     default:

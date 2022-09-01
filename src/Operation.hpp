@@ -11,6 +11,9 @@
 #include <iosfwd>
 #include <string>
 
+#include "VirtualMachine.hpp"
+#include "Visually.hpp"
+
 /* 命令コードの種類 */
 enum class OperationType
 {
@@ -30,14 +33,20 @@ struct Operation
 public:
     Operation() noexcept
         : type(OperationType::UNDEFINED)
-        , first_operand(-1)
-        , second_operand(-1)
+        , first_operand(0)
+        , second_operand(0)
     {}
 
-    Operation(OperationType type, int32_t first_operand = -1, int32_t second_operand = -1) noexcept
+    Operation(OperationType type, int32_t first_operand = 0, int32_t second_operand = 0) noexcept
         : type(type)
         , first_operand(first_operand)
         , second_operand(second_operand)
+    {}
+
+    Operation(OperationType type, Register first_operand, Register second_operand = Register::REG_0)
+        : type(type)
+        , first_operand(Int32(first_operand))
+        , second_operand(Int32(second_operand))
     {}
 
     OperationType type;

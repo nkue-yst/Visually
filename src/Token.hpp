@@ -53,6 +53,18 @@ public:
 
     // トークンの長さ
     int32_t len;
+
+private:
+    // 文字列の次の文字を返す
+    static char nextChar(const char*& str) noexcept { return str[0]; }
+};
+
+/* EOFトークン */
+struct EofToken : public Token
+{
+    EofToken() noexcept
+        : Token(TokenType::TK_EOF, nullptr, 0)
+    {}
 };
 
 int32_t searchReservedWord(const char* str);

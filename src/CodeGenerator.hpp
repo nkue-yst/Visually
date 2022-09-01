@@ -31,7 +31,7 @@ private:
 
     std::vector<struct Variable*> var_list;
 
-    std::vector<Operation*> operation_list;
+    std::vector<Operation*> op_list;
 };
 
 #endif

@@ -28,8 +28,9 @@ std::vector<Node*> Parser::parseProgram()
     std::vector<Node*> node_list;
     node_list.push_back(this->statement());
 
-    while (this->checkNextToken(";") || this->checkNextToken("\n"))
+    while (this->checkParsingToken(";") || this->checkParsingToken("\n"))
     {
+        this->parsing_token++;
         node_list.push_back(this->statement());
     }
 
@@ -40,8 +41,10 @@ Node* Parser::statement()
 {
     Node* stmt_node = nullptr;
     
-    if (this->checkNextToken("return"))
+    if (this->checkParsingToken("return"))
     {
+        this->parsing_token++;
+
         stmt_node = new Node();
         stmt_node->type = NodeType::RETURN;
         stmt_node->left = this->expression();
@@ -57,8 +60,10 @@ Node* Parser::statement()
 Node* Parser::expression()
 {
     // 次のトークンが空白文字の場合、次の文字まで飛ばす
-    while (this->checkNextToken(" "))
-    {}
+    while (this->checkParsingToken(" "))
+    {
+        this->parsing_token++;
+    }
 
     Token* token = *(this->parsing_token);
 
@@ -75,11 +80,15 @@ Node* Parser::expression()
         identifier_node->var_name = var_name;
 
         // 次のトークンが空白文字の場合、次の文字まで飛ばす
-        while (this->checkNextToken(" "))
-        {}
-
-        if (this->checkNextToken("="))    // 変数代入文
+        while (this->checkParsingToken(" "))
         {
+            this->parsing_token++;
+        }
+
+        if (this->checkParsingToken("="))    // 変数代入文
+        {
+            this->parsing_token++;
+
             Node* assign_node = new Node();
             assign_node->type = NodeType::ASSIGN;
             assign_node->left = identifier_node;
@@ -99,49 +108,63 @@ Node* Parser::expression()
 Node* Parser::parseCompare()
 {
     // 次のトークンが空白文字の場合、次の文字まで飛ばす
-    while (this->checkNextToken(" "))
-    {}
+    while (this->checkParsingToken(" "))
+    {
+        this->parsing_token++;
+    }
 
     Node* root_node = this->parseAddSub();
     Node* cmp_node = nullptr;
 
-    if (this->checkNextToken("=="))
+    if (this->checkParsingToken("=="))
     {
+        this->parsing_token++;
+
         cmp_node = new Node();
         cmp_node->type = NodeType::EQUAL;
         cmp_node->left = root_node;
         cmp_node->right = this->parseAddSub();
     }
-    else if (this->checkNextToken("!="))
+    else if (this->checkParsingToken("!="))
     {
+        this->parsing_token++;
+
         cmp_node = new Node();
         cmp_node->type = NodeType::NEQUAL;
         cmp_node->left = root_node;
         cmp_node->right = this->parseAddSub();
     }
-    else if (this->checkNextToken("<"))
+    else if (this->checkParsingToken("<"))
     {
+        this->parsing_token++;
+
         cmp_node = new Node();
         cmp_node->type = NodeType::LESS;
         cmp_node->left = root_node;
         cmp_node->right = this->parseAddSub();
     }
-    else if (this->checkNextToken(">"))
+    else if (this->checkParsingToken(">"))
     {
+        this->parsing_token++;
+
         cmp_node = new Node();
         cmp_node->type = NodeType::GREATER;
         cmp_node->left = root_node;
         cmp_node->right = this->parseAddSub();
     }
-    else if (this->checkNextToken("<="))
+    else if (this->checkParsingToken("<="))
     {
+        this->parsing_token++;
+
         cmp_node = new Node();
         cmp_node->type = NodeType::LESSEQ;
         cmp_node->left = root_node;
         cmp_node->right = this->parseAddSub();
     }
-    else if (this->checkNextToken(">="))
+    else if (this->checkParsingToken(">="))
     {
+        this->parsing_token++;
+
         cmp_node = new Node();
         cmp_node->type = NodeType::GREATEREQ;
         cmp_node->left = root_node;
@@ -161,18 +184,24 @@ Node* Parser::parseAddSub()
 
     while (true)
     {
-        if (this->checkNextToken(" "))         // 空白文字は読み飛ばす
-        {}
-        else if (this->checkNextToken("+"))    // 加算演算子の場合
+        if (this->checkParsingToken(" "))         // 空白文字は読み飛ばす
         {
+            this->parsing_token++;
+        }
+        else if (this->checkParsingToken("+"))    // 加算演算子の場合
+        {
+            this->parsing_token++;
+
             Node* add_node  = new Node();
             add_node->type  = NodeType::ADD;
             add_node->left  = root_node;
             add_node->right = this->parseMulDiv();
             root_node = add_node;
         }
-        else if (this->checkNextToken("-"))    // 減算演算子の場合
+        else if (this->checkParsingToken("-"))    // 減算演算子の場合
         {
+            this->parsing_token++;
+
             Node* sub_node  = new Node();
             sub_node->type  = NodeType::SUB;
             sub_node->left  = root_node;
@@ -192,18 +221,24 @@ Node* Parser::parseMulDiv()
 
     while (true)
     {
-        if (this->checkNextToken(" "))         // 空白文字は読み飛ばす
-        {}
-        else if (this->checkNextToken("*"))
+        if (this->checkParsingToken(" "))         // 空白文字は読み飛ばす
         {
+            this->parsing_token++;
+        }
+        else if (this->checkParsingToken("*"))
+        {
+            this->parsing_token++;
+
             Node* mul_node  = new Node();
             mul_node->type  = NodeType::MUL;
             mul_node->left  = root_node;
             mul_node->right = this->parseUnary();
             root_node = mul_node;
         }
-        else if (this->checkNextToken("/"))
+        else if (this->checkParsingToken("/"))
         {
+            this->parsing_token++;
+
             Node* div_node  = new Node();
             div_node->type  = NodeType::DIV;
             div_node->left  = root_node;
@@ -220,15 +255,20 @@ Node* Parser::parseMulDiv()
 Node* Parser::parseUnary()
 {
     // 次のトークンが空白文字の場合、次の文字まで飛ばす
-    while (this->checkNextToken(" "))
-    {}
-
-    if (checkNextToken("+"))    // 前置演算子'+'の場合はそのまま次の式を解析
+    while (this->checkParsingToken(" "))
     {
+        this->parsing_token++;
+    }
+
+    if (checkParsingToken("+"))    // 前置演算子'+'の場合はそのまま次の式を解析
+    {
+        this->parsing_token++;
         return this->parsePrimary();
     }
-    else if (checkNextToken("-"))    // 前置演算子'-'の場合
+    else if (checkParsingToken("-"))    // 前置演算子'-'の場合
     {
+        this->parsing_token++;
+
         /* 0の数値ノードを生成 */
         Node* zero_node = new Node();
         zero_node->type = NodeType::NUM;
@@ -251,18 +291,23 @@ Node* Parser::parseUnary()
 Node* Parser::parsePrimary()
 {
     // 次のトークンが空白文字の場合、次の文字まで飛ばす
-    while (this->checkNextToken(" "))
-    {}
+    while (this->checkParsingToken(" "))
+    {
+        this->parsing_token++;
+    }
 
     // 次のトークンが'('であれば式が来る
-    if (this->checkNextToken("("))
+    if (this->checkParsingToken("("))
     {
+        this->parsing_token++;
+
         Node* node = this->expression();    // 次のトークンから式ノード作成
-        if (!this->checkNextToken(")"))     // 次のトークンが')'であれば
+        if (!this->checkParsingToken(")"))     // 次のトークンが')'であれば
         {
             Error::setErrorMsg("invalid expression");
             Error::abort();
         }
+        this->parsing_token++;
 
         return node;    // 括弧内の式のルートノードを返す
     }
@@ -295,7 +340,7 @@ Node* Parser::parseNum()
     return node;
 }
 
-bool Parser::checkNextToken(std::string str)
+bool Parser::checkParsingToken(std::string str)
 {
     Token* token = *this->parsing_token;
 
@@ -306,7 +351,6 @@ bool Parser::checkNextToken(std::string str)
 
     if (std::strncmp(str.c_str(), token->token_head, token->len) == 0)
     {
-        this->parsing_token++;
         return true;
     }
 

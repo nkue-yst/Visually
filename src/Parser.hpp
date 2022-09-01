@@ -47,7 +47,7 @@ private:
     struct Node* parseNum();
 
     // 次のトークンが引数の文字と等しいかをチェック（等しければ読んでいるトークンは次へ進める）
-    bool checkNextToken(std::string ch);
+    bool checkParsingToken(std::string ch);
 
     // 解析中のトークン
     std::vector<struct Token*>::iterator parsing_token;

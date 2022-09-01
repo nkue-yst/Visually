@@ -30,7 +30,7 @@ std::vector<Token*> Token::strToToken(const char* str)
     /* 入力された文字列を1文字ずつ走査 */
     while (*str)
     {
-        char ch = str[0];
+        char ch = Token::nextChar(str);
         Token* new_token = nullptr;
 
         // 予約語かどうかを検索（何番目の予約後かを記録）
@@ -58,7 +58,7 @@ std::vector<Token*> Token::strToToken(const char* str)
             while (true)    // 複数文字の場合
             {
                 str++;
-                ch = str[0];
+                ch = Token::nextChar(str);
 
                 if (std::isalpha(ch)) new_token->len++;
                 else break;
@@ -73,7 +73,7 @@ std::vector<Token*> Token::strToToken(const char* str)
         {
             new_token = new Token(TokenType::OP, str, 1);
             str++;
-            ch = str[0];
+            ch = Token::nextChar(str);
 
             if (ch == '=')
             {
@@ -85,7 +85,7 @@ std::vector<Token*> Token::strToToken(const char* str)
         {
             new_token = new Token(TokenType::OP, str, 1);
             str++;
-            ch = str[0];
+            ch = Token::nextChar(str);
 
             if (ch == '=')
             {
@@ -110,7 +110,7 @@ std::vector<Token*> Token::strToToken(const char* str)
             while (true)    // 複数桁の場合
             {
                 str++;
-                ch = str[0];
+                ch = Token::nextChar(str);
 
                 if (std::isdigit(ch))
                 {
@@ -131,8 +131,7 @@ std::vector<Token*> Token::strToToken(const char* str)
         token_list.push_back(new_token);
     }
 
-    Token* eof_token = new Token(TokenType::TK_EOF, nullptr, 0);
-    token_list.push_back(eof_token);
+    token_list.push_back(new EofToken);
 
     return token_list;
 }
