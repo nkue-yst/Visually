@@ -18,6 +18,8 @@ enum class OperationType
     READ, LOAD,
     ADD,  SUB, MUL, DIV,
     ASSIGN,
+    EQUAL, NEQUAL,
+    LESS, GREATER, LESSEQ, GREATEREQ,
     RETURN,
     UNDEFINED,
 };

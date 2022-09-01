@@ -83,7 +83,7 @@ Node* Parser::expression()
             Node* assign_node = new Node();
             assign_node->type = NodeType::ASSIGN;
             assign_node->left = identifier_node;
-            assign_node->right = this->parseAddSub();
+            assign_node->right = this->parseCompare();
 
             return assign_node;
         }
@@ -93,7 +93,66 @@ Node* Parser::expression()
         }
     }
 
-    return this->parseAddSub();
+    return this->parseCompare();
+}
+
+Node* Parser::parseCompare()
+{
+    // 次のトークンが空白文字の場合、次の文字まで飛ばす
+    while (this->checkNextToken(" "))
+    {}
+
+    Node* root_node = this->parseAddSub();
+    Node* cmp_node = nullptr;
+
+    if (this->checkNextToken("=="))
+    {
+        cmp_node = new Node();
+        cmp_node->type = NodeType::EQUAL;
+        cmp_node->left = root_node;
+        cmp_node->right = this->parseAddSub();
+    }
+    else if (this->checkNextToken("!="))
+    {
+        cmp_node = new Node();
+        cmp_node->type = NodeType::NEQUAL;
+        cmp_node->left = root_node;
+        cmp_node->right = this->parseAddSub();
+    }
+    else if (this->checkNextToken("<"))
+    {
+        cmp_node = new Node();
+        cmp_node->type = NodeType::LESS;
+        cmp_node->left = root_node;
+        cmp_node->right = this->parseAddSub();
+    }
+    else if (this->checkNextToken(">"))
+    {
+        cmp_node = new Node();
+        cmp_node->type = NodeType::GREATER;
+        cmp_node->left = root_node;
+        cmp_node->right = this->parseAddSub();
+    }
+    else if (this->checkNextToken("<="))
+    {
+        cmp_node = new Node();
+        cmp_node->type = NodeType::LESSEQ;
+        cmp_node->left = root_node;
+        cmp_node->right = this->parseAddSub();
+    }
+    else if (this->checkNextToken(">="))
+    {
+        cmp_node = new Node();
+        cmp_node->type = NodeType::GREATEREQ;
+        cmp_node->left = root_node;
+        cmp_node->right = this->parseAddSub();
+    }
+    else
+    {
+        return root_node;
+    }
+
+    return cmp_node;
 }
 
 Node* Parser::parseAddSub()

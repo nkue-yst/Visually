@@ -21,6 +21,14 @@ enum class NodeType
     MUL,          // 乗算
     DIV,          // 除算
     ASSIGN,       // 代入演算子
+
+    EQUAL,        // ==
+    NEQUAL,       // !=
+    LESS,         // <
+    GREATER,      // >
+    LESSEQ,       // <=
+    GREATEREQ,    // >=
+
     IDENTIFIER,   // 識別子
 
     RETURN,       // return文
@@ -107,6 +115,24 @@ static std::ostream& operator<<(std::ostream& stream, const Node* node)
         break;
     case NodeType::ASSIGN:
         type = "ASSIGN";
+        break;
+    case NodeType::EQUAL:
+        type = "EQUAL";
+        break;
+    case NodeType::NEQUAL:
+        type = "NEQUAL";
+        break;
+    case NodeType::LESS:
+        type = "LESS";
+        break;
+    case NodeType::GREATER:
+        type = "GREATER";
+        break;
+    case NodeType::LESSEQ:
+        type = "LESSEQ";
+        break;
+    case NodeType::GREATEREQ:
+        type = "GREATEREQ";
         break;
     case NodeType::IDENTIFIER:
         type = "IDENTIFIER";

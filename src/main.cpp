@@ -12,6 +12,7 @@
 #include "Token.hpp"
 #include "VirtualMachine.hpp"
 
+#include <iomanip>
 #include <iostream>
 #include <fstream>
 #include <vector>
@@ -136,7 +137,7 @@ int main(int argc, char** argv)
 
         for (Operation* op : code_list)
         {
-            std::cout << "[" << code_index++ << "]: " << op << std::endl;
+            std::cout << "[" << std::setw(2) << code_index++ << "]: " << op << std::endl;
         }
 
         std::cout << "-------------------------------" << std::endl << std::endl;

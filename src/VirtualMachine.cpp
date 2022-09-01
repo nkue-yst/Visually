@@ -100,6 +100,31 @@ int32_t VirtualMachine::run(std::vector<struct Operation*>& operation_list, bool
             this->vp->value = this->reg[0];
             break;
 
+        /* 比較演算子 */
+        case OperationType::EQUAL:
+            this->push(this->reg[op->first_operand] == this->reg[op->second_operand]);
+            break;
+
+        case OperationType::NEQUAL:
+            this->push(this->reg[op->first_operand] != this->reg[op->second_operand]);
+            break;
+
+        case OperationType::LESS:
+            this->push(this->reg[op->first_operand] < this->reg[op->second_operand]);
+            break;
+
+        case OperationType::GREATER:
+            this->push(this->reg[op->first_operand] > this->reg[op->second_operand]);
+            break;
+
+        case OperationType::LESSEQ:
+            this->push(this->reg[op->first_operand] <= this->reg[op->second_operand]);
+            break;
+            
+        case OperationType::GREATEREQ:
+            this->push(this->reg[op->first_operand] >= this->reg[op->second_operand]);
+            break;
+
         case OperationType::RETURN:    // return文
             return this->reg[op->first_operand];
 

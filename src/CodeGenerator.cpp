@@ -79,6 +79,60 @@ void CodeGenerator::generate(Node* node) noexcept
         this->operation_list.push_back(new Operation(ASSIGN));
         break;
 
+    case NodeType::EQUAL:
+        this->generate(node->left);
+        this->generate(node->right);
+
+        this->operation_list.push_back(new Operation(POP,   Int32(Register::REG_0)));
+        this->operation_list.push_back(new Operation(POP,   Int32(Register::REG_1)));
+        this->operation_list.push_back(new Operation(EQUAL, Int32(Register::REG_0), Int32(Register::REG_1)));
+        break;
+
+    case NodeType::NEQUAL:
+        this->generate(node->left);
+        this->generate(node->right);
+
+        this->operation_list.push_back(new Operation(POP,    Int32(Register::REG_0)));
+        this->operation_list.push_back(new Operation(POP,    Int32(Register::REG_1)));
+        this->operation_list.push_back(new Operation(NEQUAL, Int32(Register::REG_0), Int32(Register::REG_1)));
+        break;
+
+    case NodeType::LESS:
+        this->generate(node->left);
+        this->generate(node->right);
+
+        this->operation_list.push_back(new Operation(POP,  Int32(Register::REG_0)));
+        this->operation_list.push_back(new Operation(POP,  Int32(Register::REG_1)));
+        this->operation_list.push_back(new Operation(LESS, Int32(Register::REG_0), Int32(Register::REG_1)));
+        break;
+    
+    case NodeType::GREATER:
+        this->generate(node->left);
+        this->generate(node->right);
+
+        this->operation_list.push_back(new Operation(POP,     Int32(Register::REG_0)));
+        this->operation_list.push_back(new Operation(POP,     Int32(Register::REG_1)));
+        this->operation_list.push_back(new Operation(GREATER, Int32(Register::REG_0), Int32(Register::REG_1)));
+        break;
+
+    case NodeType::LESSEQ:
+        this->generate(node->left);
+        this->generate(node->right);
+
+        this->operation_list.push_back(new Operation(POP,    Int32(Register::REG_0)));
+        this->operation_list.push_back(new Operation(POP,    Int32(Register::REG_1)));
+        this->operation_list.push_back(new Operation(LESSEQ, Int32(Register::REG_0), Int32(Register::REG_1)));
+        break;
+
+    case NodeType::GREATEREQ:
+        this->generate(node->left);
+        this->generate(node->right);
+
+        this->operation_list.push_back(new Operation(POP,       Int32(Register::REG_0)));
+        this->operation_list.push_back(new Operation(POP,       Int32(Register::REG_1)));
+        this->operation_list.push_back(new Operation(GREATEREQ, Int32(Register::REG_0), Int32(Register::REG_1)));
+        break;
+
     case NodeType::RETURN:
         this->generate(node->left);
 

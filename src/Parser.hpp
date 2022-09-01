@@ -28,6 +28,9 @@ private:
     // プログラム本文の解析
     struct Node* expression();
 
+    // 比較演算の解析
+    struct Node* parseCompare();
+
     // 加減算を解析
     struct Node* parseAddSub();
 

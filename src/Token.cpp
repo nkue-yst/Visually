@@ -64,10 +64,34 @@ std::vector<Token*> Token::strToToken(const char* str)
                 else break;
             }
         }
-        else if (ch == '+' || ch == '-' || ch == '*' || ch == '/' || ch == '=')    // 文字が演算子の場合
+        else if (ch == '+' || ch == '-' || ch == '*' || ch == '/')    // 文字が演算子の場合
         {
             new_token = new Token(TokenType::OP, str, 1);
             str++;
+        }
+        else if (ch == '<' || ch == '>')    // 大小比較演算子
+        {
+            new_token = new Token(TokenType::OP, str, 1);
+            str++;
+            ch = str[0];
+
+            if (ch == '=')
+            {
+                new_token->len++;
+                str++;
+            }
+        }
+        else if (ch == '=' || ch == '!')    // 同値比較演算子 or 代入演算子
+        {
+            new_token = new Token(TokenType::OP, str, 1);
+            str++;
+            ch = str[0];
+
+            if (ch == '=')
+            {
+                new_token->len++;
+                str++;
+            }
         }
         else if (ch == '(')
         {
