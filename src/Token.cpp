@@ -121,7 +121,8 @@ int32_t searchReservedWord(const char* str)
     {
         if (std::strncmp(str, word, std::strlen(word)) == 0)
         {
-            return index;
+            if (str[std::strlen(word)] == ' ')
+                return index;
         }
         index++;
     }
