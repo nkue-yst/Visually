@@ -100,6 +100,9 @@ int32_t VirtualMachine::run(std::vector<struct Operation*>& operation_list, bool
             this->vp->value = this->reg[0];
             break;
 
+        case OperationType::RETURN:    // return文
+            return this->reg[op->first_operand];
+
         default:
             break;
         }

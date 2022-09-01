@@ -18,6 +18,7 @@ enum class OperationType
     READ, LOAD,
     ADD,  SUB, MUL, DIV,
     ASSIGN,
+    RETURN,
     UNDEFINED,
 };
 

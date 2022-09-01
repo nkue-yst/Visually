@@ -79,6 +79,13 @@ void CodeGenerator::generate(Node* node) noexcept
         this->operation_list.push_back(new Operation(ASSIGN));
         break;
 
+    case NodeType::RETURN:
+        this->generate(node->left);
+
+        this->operation_list.push_back(new Operation(POP, Int32(Register::REG_0)));
+        this->operation_list.push_back(new Operation(RETURN, Int32(Register::REG_0)));
+        break;
+
     case NodeType::IDENTIFIER:
         if (!this->findVariable(node->var_name))
             this->generateVariable(node->var_name);

@@ -22,6 +22,9 @@ private:
     // 入力するプログラム
     std::vector<struct Node*> parseProgram();
 
+    // 実行分の解析
+    struct Node* statement();
+
     // プログラム本文の解析
     struct Node* expression();
 

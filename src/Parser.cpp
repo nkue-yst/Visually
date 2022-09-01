@@ -26,14 +26,32 @@ std::vector<Node*> Parser::parse(std::vector<Token*>& token_list)
 std::vector<Node*> Parser::parseProgram()
 {
     std::vector<Node*> node_list;
-    node_list.push_back(this->expression());
+    node_list.push_back(this->statement());
 
     while (this->checkNextToken(";") || this->checkNextToken("\n"))
     {
-        node_list.push_back(this->expression());
+        node_list.push_back(this->statement());
     }
 
     return node_list;
+}
+
+Node* Parser::statement()
+{
+    Node* stmt_node = nullptr;
+    
+    if (this->checkNextToken("return"))
+    {
+        stmt_node = new Node();
+        stmt_node->type = NodeType::RETURN;
+        stmt_node->left = this->expression();
+    }
+    else
+    {
+        stmt_node = this->expression();
+    }
+
+    return stmt_node;
 }
 
 Node* Parser::expression()

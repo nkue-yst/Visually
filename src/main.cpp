@@ -142,9 +142,12 @@ int main(int argc, char** argv)
         std::cout << "-------------------------------" << std::endl << std::endl;
     }
 
-    std::cout << vm.run(code_list, log_flag) << std::endl;    // 命令列を実行（実行結果を出力）
+    int32_t return_code = vm.run(code_list, log_flag);    // 命令列を実行した結果をリターンコードとする
 
     for (auto code : code_list)   delete code;     // 生成した命令列の破棄
     for (auto node : node_list)   delete node;     // 生成したノードの破棄
     for (auto token : token_list) delete token;    // 生成したトークンの破棄
+
+    std::cout << std::endl << "Return code: " << return_code << std::endl;
+    return return_code;
 }

@@ -43,6 +43,9 @@ std::ostream& operator<<(std::ostream& stream, const Operation* op) noexcept
     case OperationType::ASSIGN:
         stream << "ASSIGN";
         break;
+    case OperationType::RETURN:
+        stream << "RETURN (Reg_" << op->first_operand << ")";
+        break;
     default:
         break;
     }

@@ -19,11 +19,19 @@
 (2) 式  
 ![式](SyntaxDiagram/%E5%BC%8F.png)
 
-(3) 変数代入文  
+(3) 実行文  
+![実行文](SyntaxDiagram/%E5%AE%9F%E8%A1%8C%E6%96%87.png)
+
+(4) 変数代入文  
 ![変数代入文](SyntaxDiagram/%E5%A4%89%E6%95%B0%E4%BB%A3%E5%85%A5.png)
 
-(4) 項  
+(5) 項  
 ![項](SyntaxDiagram/%E9%A0%85.png)
 
-(5) 因子  
+(6) 因子  
 ![因子](SyntaxDiagram/%E5%9B%A0%E5%AD%90.png)
+
+## 実行文
+
+(1) return文  
+![return文](SyntaxDiagram/return%E6%96%87.png)

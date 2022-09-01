@@ -12,15 +12,24 @@
 #include <string>
 #include <vector>
 
+static const char* reserved[] =
+{
+    "return",
+};
+
 /* 入力文字列を分解したトークンの種類 */
 enum class TokenType
 {
     NUM,          // 数値
     OP,           // 演算子
     IDENTIFIER,   // 識別子（変数）
+
     L_BRACE,      // '('
     R_BRACE,      // ')'
     SPACE,        // 空白文字
+
+    RESERVED,     // 予約語
+
     EOL,          // 改行文字
     TK_EOF,       // 終端文字
     UNDEFINED,    // 未定義
@@ -45,6 +54,9 @@ public:
     // トークンの長さ
     int32_t len;
 };
+
+int32_t searchReservedWord(const char* str);
+Token* createReservedToken(const char* str, int32_t index);
 
 // トークン情報出力処理
 std::ostream& operator<<(std::ostream& stream, const Token* token);

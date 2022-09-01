@@ -33,7 +33,15 @@ std::vector<Token*> Token::strToToken(const char* str)
         char ch = str[0];
         Token* new_token = nullptr;
 
-        if (ch == '\n' || ch == ';')    // 改行文字の場合
+        // 予約語かどうかを検索（何番目の予約後かを記録）
+        int32_t reserved_index = searchReservedWord(str);    
+
+        if (reserved_index >= 0)
+        {
+            new_token = createReservedToken(str, reserved_index);
+            str += new_token->len;
+        }
+        else if (ch == '\n' || ch == ';')    // 改行文字の場合
         {
             new_token = new Token(TokenType::EOL, str, 1);
             str++;
@@ -105,6 +113,26 @@ std::vector<Token*> Token::strToToken(const char* str)
     return token_list;
 }
 
+int32_t searchReservedWord(const char* str)
+{
+    int32_t index = 0;
+
+    for (const char* word : reserved)
+    {
+        if (std::strncmp(str, word, std::strlen(word)) == 0)
+        {
+            return index;
+        }
+        index++;
+    }
+    return -1;
+}
+
+Token* createReservedToken(const char* str, int32_t index)
+{
+    return new Token(TokenType::RESERVED, str, std::strlen(reserved[index]));
+}
+
 std::ostream& operator<<(std::ostream& stream, const Token* token)
 {
     std::string type;
@@ -126,6 +154,9 @@ std::ostream& operator<<(std::ostream& stream, const Token* token)
         break;
     case TokenType::SPACE:
         type = "SPACE";
+        break;
+    case TokenType::RESERVED:
+        type = "RESERVED";
         break;
     case TokenType::EOL:
         type = "EOL";
