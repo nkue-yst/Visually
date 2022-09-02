@@ -12,6 +12,7 @@
 #include "Token.hpp"
 #include "VirtualMachine.hpp"
 
+#include <chrono>
 #include <iomanip>
 #include <iostream>
 #include <fstream>
@@ -42,6 +43,9 @@ int main(int argc, char** argv)
     Parser parser;                   // プログラム解析器
     TextInput text_input;            // ソースプログラム読み込みクラス
     VirtualMachine vm;               // 実行用仮想マシン
+
+    std::chrono::system_clock::time_point tp_start, tp_end;    // 処理時間計測用
+    double dur_tokenize, dur_parsing, dur_code_generating, dur_running;    // 計測した処理時間を格納する
 
     int32_t ac = 1;    // コマンドライン引数走査カウンタ
 
@@ -89,9 +93,12 @@ int main(int argc, char** argv)
     text_input.openFile(argv[ac]);    // ソースプログラムを開く
 
     /* プログラムをトークンに変換 */
+    tp_start = std::chrono::system_clock::now();
     std::vector<Token*> token_list;
     std::string file_contents = std::string(std::istreambuf_iterator<char>(text_input.fs), std::istreambuf_iterator<char>());
     token_list = Token::strToToken(file_contents.c_str());
+    tp_end = std::chrono::system_clock::now();
+    dur_tokenize = std::chrono::duration_cast<std::chrono::microseconds>(tp_end - tp_start).count();
 
     /* 生成されたトークン一覧を出力 */
     if (token_flag)
@@ -103,7 +110,10 @@ int main(int argc, char** argv)
     }
 
     /* トークンから構文解析を行う（構文木のルートノードを取得） */
+    tp_start = std::chrono::system_clock::now();
     std::vector<Node*> node_list = parser.parse(token_list);
+    tp_end = std::chrono::system_clock::now();
+    dur_parsing = std::chrono::duration_cast<std::chrono::microseconds>(tp_end - tp_start).count();
 
     /* 生成されたノード一覧を出力 */
     if (node_flag)
@@ -126,7 +136,11 @@ int main(int argc, char** argv)
         std::cout << "\e[1A" << "-------------------------------" << std::endl << std::endl;
     }
 
-    std::vector<Operation*> code_list = code_generator.generateCode(node_list);    // 実行用コードを生成
+    /* 実行用コードを生成 */
+    tp_start = std::chrono::system_clock::now();
+    std::vector<Operation*> code_list = code_generator.generateCode(node_list);
+    tp_end = std::chrono::system_clock::now();
+    dur_code_generating = std::chrono::duration_cast<std::chrono::microseconds>(tp_end - tp_start).count();
 
     /* 生成された命令列を出力 */
     if (code_flag)
@@ -143,12 +157,24 @@ int main(int argc, char** argv)
         std::cout << "-------------------------------" << std::endl << std::endl;
     }
 
-    int32_t return_code = vm.run(code_list, log_flag);    // 命令列を実行した結果をリターンコードとする
+    /* 命令列を実行 */
+    tp_start = std::chrono::system_clock::now();
+    int32_t return_code = vm.run(code_list, log_flag);
+    tp_end = std::chrono::system_clock::now();
+    dur_running = std::chrono::duration_cast<std::chrono::microseconds>(tp_end - tp_start).count();
 
     for (auto code : code_list)   delete code;     // 生成した命令列の破棄
     for (auto node : node_list)   delete node;     // 生成したノードの破棄
     for (auto token : token_list) delete token;    // 生成したトークンの破棄
 
-    std::cout << std::endl << "Return code: " << return_code << std::endl;
+    /* 処理時間の出力 */
+    std::cout << "------------------------" << std::endl;
+    std::cout << "Tokenize:      " << std::setw(3) << dur_tokenize        << " μs" << std::endl;
+    std::cout << "Parse:         " << std::setw(3) << dur_parsing         << " μs" << std::endl;
+    std::cout << "Code Generate: " << std::setw(3) << dur_code_generating << " μs" << std::endl;
+    std::cout << "Run:           " << std::setw(3) << dur_running         << " μs" << std::endl;
+    std::cout << "------------------------" << std::endl;
+
+    std::cout << "Return code: " << return_code << std::endl;
     return return_code;
 }
