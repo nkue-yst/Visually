@@ -8,6 +8,9 @@
 #define __VISUALLY_HPP__
 
 #include <cstdint>
+#include <string>
+
+extern std::string program_name;    // 読み込んだプログラム名
 
 template<typename T, typename U>
 T Cast(U value)

@@ -4,6 +4,7 @@
  * @date    2022/08/25
  */
 
+#include "Assembler.hpp"
 #include "CodeGenerator.hpp"
 #include "Error.hpp"
 #include "Node.hpp"
@@ -39,6 +40,7 @@ int main(int argc, char** argv)
     bool code_flag  = false;    // 命令列出力フラグ
     bool log_flag   = false;    // 実行時
 
+    Assembler assembler;             // アセンブラ
     CodeGenerator code_generator;    // 命令列生成器
     Parser parser;                   // プログラム解析器
     TextInput text_input;            // ソースプログラム読み込みクラス
@@ -90,7 +92,8 @@ int main(int argc, char** argv)
         Error::abort();
     }
 
-    text_input.openFile(argv[ac]);    // ソースプログラムを開く
+    program_name = argv[ac];
+    text_input.openFile(program_name.c_str());    // ソースプログラムを開く
 
     /* プログラムをトークンに変換 */
     tp_start = std::chrono::system_clock::now();
@@ -135,6 +138,9 @@ int main(int argc, char** argv)
 
         std::cout << "\e[1A" << "-------------------------------" << std::endl << std::endl;
     }
+
+    /* アセンブリを出力 */
+    assembler.generateAssembly(node_list);
 
     /* 実行用コードを生成 */
     tp_start = std::chrono::system_clock::now();
